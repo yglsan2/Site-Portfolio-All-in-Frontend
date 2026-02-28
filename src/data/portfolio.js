@@ -1,517 +1,66 @@
 /**
- * Données statiques du portfolio (générées par scripts/export-from-api.js).
+ * Données statiques du portfolio (version frontend-only).
+ * Pour régénérer avec tous les extraits de code : lancer le backend (repo Site-Portfolio)
+ * puis exécuter : node scripts/export-from-api.js
  */
 
 export const profile = {
-  "id": 1,
-  "name": "Benjamin Moine",
-  "title": "Développeur d'applications",
-  "bio": "Développeur passionné par les applications et l'infra. Expérience en Java (Jakarta EE, Spring Boot, Maven), Python, JavaScript, modélisation de données et DevOps (Docker, Kubernetes, Ansible, Jenkins, CI/CD). Méthodes agiles (Scrum), tests unitaires et déploiement. Anglais C1.",
-  "email": null,
-  "linkedinUrl": null,
-  "githubUrl": "https://github.com/yglsan2"
+  id: 1,
+  name: 'Benjamin Moine',
+  title: "Développeur d'applications",
+  bio: "Développeur passionné par les applications et l'infra. Expérience en Java (Jakarta EE, Spring Boot, Maven), Python, JavaScript, modélisation de données et DevOps (Docker, Kubernetes, Ansible, Jenkins, CI/CD). Méthodes agiles (Scrum), tests unitaires et déploiement. Anglais C1.",
+  email: null,
+  linkedinUrl: null,
+  githubUrl: 'https://github.com/yglsan2'
 }
 
 export const projects = [
-  {
-    "id": 1,
-    "title": "BarrelMCD (Python)",
-    "slug": "barrelmcd-python",
-    "description": "Outil de modélisation MCD en Python. Interface graphique (Tkinter), génération de schémas, export. Projet personnel complet et utilisable.",
-    "type": "SOFTWARE",
-    "technologies": [
-      "Python",
-      "Tkinter",
-      "SQL"
-    ],
-    "sortOrder": 1,
-    "projectUrl": null,
-    "repoUrl": "https://github.com/yglsan2/BarrelMCD-python"
-  },
-  {
-    "id": 2,
-    "title": "Lumières d'Ukraine",
-    "slug": "lumieres-ukraine",
-    "description": "Plateforme culturelle : bibliothèque virtuelle et événements. Vue 3, i18n (FR, EN, UK, DE, PL), backend Spring Boot avec JWT.",
-    "type": "WEBSITE",
-    "technologies": [
-      "Vue 3",
-      "Pinia",
-      "Vue I18n",
-      "Spring Boot",
-      "PostgreSQL"
-    ],
-    "sortOrder": 2,
-    "projectUrl": null,
-    "repoUrl": "https://github.com/yglsan2/Ukraine"
-  },
-  {
-    "id": 3,
-    "title": "DokiLight",
-    "slug": "dokilight",
-    "description": "Chatbot RAG (stage Dokos) : version light de Doki Expert. Recherche par mots-clés dans la doc, PostgreSQL/pgvector, Streamlit, scoring hybride sémantique + conceptuel.",
-    "type": "SOFTWARE",
-    "technologies": [
-      "Python",
-      "Streamlit",
-      "PostgreSQL",
-      "pgvector",
-      "SentenceTransformer"
-    ],
-    "sortOrder": 3,
-    "projectUrl": null,
-    "repoUrl": "https://github.com/yglsan2/DokiLight"
-  },
-  {
-    "id": 4,
-    "title": "Noublipo (NopList)",
-    "slug": "noublipo",
-    "description": "Application liste de courses / shopping list.",
-    "type": "SOFTWARE",
-    "technologies": [
-      "Flutter",
-      "Dart"
-    ],
-    "sortOrder": 4,
-    "projectUrl": null,
-    "repoUrl": "https://github.com/yglsan2/Noublipo"
-  },
-  {
-    "id": 5,
-    "title": "ManyFaces",
-    "slug": "manyfaces",
-    "description": "Logiciel de création de personnages et PNJ pour jeux de rôle.",
-    "type": "SOFTWARE",
-    "technologies": [
-      "Flutter",
-      "Dart"
-    ],
-    "sortOrder": 5,
-    "projectUrl": null,
-    "repoUrl": "https://github.com/yglsan2/RPGproject-Flutter-3-me-application-sous-flutter-"
-  },
-  {
-    "id": 6,
-    "title": "MoodCast",
-    "slug": "moodcast",
-    "description": "Application Flutter (météo / ambiance).",
-    "type": "SOFTWARE",
-    "technologies": [
-      "Flutter",
-      "Dart"
-    ],
-    "sortOrder": 6,
-    "projectUrl": null,
-    "repoUrl": "https://github.com/yglsan2/MoodCast"
-  },
-  {
-    "id": 7,
-    "title": "Carned Beef",
-    "slug": "carned-beef",
-    "description": "Partage de partitions musicales.",
-    "type": "SOFTWARE",
-    "technologies": [
-      "Flutter",
-      "Dart"
-    ],
-    "sortOrder": 7,
-    "projectUrl": null,
-    "repoUrl": "https://github.com/yglsan2/CarnedBeef"
-  },
-  {
-    "id": 8,
-    "title": "PloufPlouf",
-    "slug": "ploufplouf",
-    "description": "Logiciel de tirage au sort pédagogique.",
-    "type": "SOFTWARE",
-    "technologies": [
-      "Flutter",
-      "Dart"
-    ],
-    "sortOrder": 8,
-    "projectUrl": null,
-    "repoUrl": "https://github.com/yglsan2/PloufPlouf"
-  },
-  {
-    "id": 9,
-    "title": "Mes applications UserScript",
-    "slug": "userscripts",
-    "description": "Ensemble d’extensions utilisateur en JavaScript (UserScript) : Lichess, etc.",
-    "type": "OPEN_SOURCE",
-    "technologies": [
-      "JavaScript",
-      "UserScript"
-    ],
-    "sortOrder": 9,
-    "projectUrl": null,
-    "repoUrl": "https://github.com/yglsan2/Mes-applications-Userscript-JS-"
-  }
+  { id: 1, title: "BarrelMCD (Python)", slug: "barrelmcd-python", description: "Outil de modélisation MCD en Python. Interface graphique (Tkinter), génération de schémas, export. Projet personnel complet et utilisable.", type: "SOFTWARE", technologies: ["Python", "Tkinter", "SQL"], sortOrder: 1, projectUrl: null, repoUrl: "https://github.com/yglsan2/BarrelMCD-python" },
+  { id: 2, title: "Lumières d'Ukraine", slug: "lumieres-ukraine", description: "Plateforme culturelle : bibliothèque virtuelle et événements. Vue 3, i18n (FR, EN, UK, DE, PL), backend Spring Boot avec JWT.", type: "WEBSITE", technologies: ["Vue 3", "Pinia", "Vue I18n", "Spring Boot", "PostgreSQL"], sortOrder: 2, projectUrl: null, repoUrl: "https://github.com/yglsan2/Ukraine" },
+  { id: 10, title: "Site Hypnotisation (Chloé Deroy)", slug: "site-hypnotisation", description: "Site web professionnel pour hypnothérapeute : réservation, paiement Stripe, React + Vite, backend Spring Boot (Java 21), JWT, PostgreSQL, RGPD.", type: "WEBSITE", technologies: ["React", "Vite", "Tailwind", "Spring Boot", "Java 21", "JWT", "Stripe", "PostgreSQL"], sortOrder: 3, projectUrl: null, repoUrl: "https://github.com/yglsan2/SiteHypnotisation" },
+  { id: 3, title: "DokiLight", slug: "dokilight", description: "Chatbot RAG (stage Dokos) : version light de Doki Expert. Recherche par mots-clés dans la doc, PostgreSQL/pgvector, Streamlit, scoring hybride sémantique + conceptuel.", type: "SOFTWARE", technologies: ["Python", "Streamlit", "PostgreSQL", "pgvector", "SentenceTransformer"], sortOrder: 4, projectUrl: null, repoUrl: "https://github.com/yglsan2/DokiLight" },
+  { id: 4, title: "Noublipo (NopList)", slug: "noublipo", description: "Application liste de courses / shopping list.", type: "SOFTWARE", technologies: ["Flutter", "Dart"], sortOrder: 5, projectUrl: null, repoUrl: "https://github.com/yglsan2/Noublipo" },
+  { id: 5, title: "ManyFaces", slug: "manyfaces", description: "Logiciel de création de personnages et PNJ pour jeux de rôle.", type: "SOFTWARE", technologies: ["Flutter", "Dart"], sortOrder: 6, projectUrl: null, repoUrl: "https://github.com/yglsan2/RPGproject-Flutter-3-me-application-sous-flutter-" },
+  { id: 6, title: "MoodCast", slug: "moodcast", description: "Application Flutter (météo / ambiance).", type: "SOFTWARE", technologies: ["Flutter", "Dart"], sortOrder: 7, projectUrl: null, repoUrl: "https://github.com/yglsan2/MoodCast" },
+  { id: 7, title: "Carned Beef", slug: "carned-beef", description: "Partage de partitions musicales.", type: "SOFTWARE", technologies: ["Flutter", "Dart"], sortOrder: 8, projectUrl: null, repoUrl: "https://github.com/yglsan2/CarnedBeef" },
+  { id: 8, title: "PloufPlouf", slug: "ploufplouf", description: "Logiciel de tirage au sort pédagogique.", type: "SOFTWARE", technologies: ["Flutter", "Dart"], sortOrder: 9, projectUrl: null, repoUrl: "https://github.com/yglsan2/PloufPlouf" },
+  { id: 9, title: "Mes applications UserScript", slug: "userscripts", description: "Ensemble d'extensions utilisateur en JavaScript (UserScript) : Lichess, etc.", type: "OPEN_SOURCE", technologies: ["JavaScript", "UserScript"], sortOrder: 10, projectUrl: null, repoUrl: "https://github.com/yglsan2/Mes-applications-Userscript-JS-" }
 ]
 
 export const skills = [
-  {
-    "id": 1,
-    "name": "Java",
-    "category": "Backend",
-    "level": 90,
-    "sortOrder": 1,
-    "keywords": [
-      "Jakarta EE",
-      "Spring Boot",
-      "JPA",
-      "Maven"
-    ]
-  },
-  {
-    "id": 2,
-    "name": "Spring Boot",
-    "category": "Backend",
-    "level": 88,
-    "sortOrder": 2,
-    "keywords": [
-      "REST",
-      "Security",
-      "Data JPA",
-      "Validation"
-    ]
-  },
-  {
-    "id": 3,
-    "name": "Python",
-    "category": "Backend",
-    "level": 85,
-    "sortOrder": 3,
-    "keywords": [
-      "Streamlit",
-      "pgvector",
-      "Dokos"
-    ]
-  },
-  {
-    "id": 4,
-    "name": "Tomcat",
-    "category": "Backend",
-    "level": 75,
-    "sortOrder": 4,
-    "keywords": [
-      "Serveur d'applications",
-      "Java EE"
-    ]
-  },
-  {
-    "id": 5,
-    "name": "Frappe / ERPNext",
-    "category": "Backend",
-    "level": 70,
-    "sortOrder": 5,
-    "keywords": [
-      "Framework Python",
-      "ERP",
-      "Frappe"
-    ]
-  },
-  {
-    "id": 6,
-    "name": "Chatbot RAG",
-    "category": "Backend",
-    "level": 78,
-    "sortOrder": 6,
-    "keywords": [
-      "DokiLight",
-      "Recherche sémantique",
-      "pgvector",
-      "Scoring hybride"
-    ]
-  },
-  {
-    "id": 12,
-    "name": "PostgreSQL",
-    "category": "Data",
-    "level": 80,
-    "sortOrder": 1,
-    "keywords": [
-      "SQL",
-      "pgvector",
-      "Migrations"
-    ]
-  },
-  {
-    "id": 13,
-    "name": "MySQL",
-    "category": "Data",
-    "level": 75,
-    "sortOrder": 2,
-    "keywords": [
-      "SQL",
-      "SGBD"
-    ]
-  },
-  {
-    "id": 14,
-    "name": "SQL Server",
-    "category": "Data",
-    "level": 70,
-    "sortOrder": 3,
-    "keywords": [
-      "Microsoft",
-      "T-SQL",
-      "SGBD"
-    ]
-  },
-  {
-    "id": 15,
-    "name": "Docker",
-    "category": "DevOps",
-    "level": 78,
-    "sortOrder": 1,
-    "keywords": [
-      "Conteneurisation",
-      "Déploiement"
-    ]
-  },
-  {
-    "id": 16,
-    "name": "Kubernetes",
-    "category": "DevOps",
-    "level": 70,
-    "sortOrder": 2,
-    "keywords": [
-      "Orchestration",
-      "Pods"
-    ]
-  },
-  {
-    "id": 17,
-    "name": "Ansible",
-    "category": "DevOps",
-    "level": 72,
-    "sortOrder": 3,
-    "keywords": [
-      "Load balancing",
-      "Déploiement"
-    ]
-  },
-  {
-    "id": 18,
-    "name": "Jenkins",
-    "category": "DevOps",
-    "level": 75,
-    "sortOrder": 4,
-    "keywords": [
-      "CI",
-      "Pipelines"
-    ]
-  },
-  {
-    "id": 19,
-    "name": "GitHub Actions / CI-CD",
-    "category": "DevOps",
-    "level": 80,
-    "sortOrder": 5,
-    "keywords": [
-      "CI/CD",
-      "Workflows"
-    ]
-  },
-  {
-    "id": 20,
-    "name": "GitLab",
-    "category": "DevOps",
-    "level": 78,
-    "sortOrder": 6,
-    "keywords": [
-      "CI/CD",
-      "Registry",
-      "Dépôts"
-    ]
-  },
-  {
-    "id": 21,
-    "name": "Prometheus",
-    "category": "DevOps",
-    "level": 72,
-    "sortOrder": 7,
-    "keywords": [
-      "Monitoring",
-      "Métriques",
-      "Alerting"
-    ]
-  },
-  {
-    "id": 22,
-    "name": "Grafana",
-    "category": "DevOps",
-    "level": 72,
-    "sortOrder": 8,
-    "keywords": [
-      "Tableaux de bord",
-      "Visualisation",
-      "Monitoring"
-    ]
-  },
-  {
-    "id": 23,
-    "name": "AWS",
-    "category": "DevOps",
-    "level": 68,
-    "sortOrder": 9,
-    "keywords": [
-      "Cloud",
-      "EC2",
-      "S3",
-      "Déploiement"
-    ]
-  },
-  {
-    "id": 24,
-    "name": "VirtualBox",
-    "category": "DevOps",
-    "level": 75,
-    "sortOrder": 10,
-    "keywords": [
-      "Virtualisation",
-      "VM",
-      "Environnements de test"
-    ]
-  },
-  {
-    "id": 25,
-    "name": "SSH",
-    "category": "DevOps",
-    "level": 82,
-    "sortOrder": 11,
-    "keywords": [
-      "Sécurisation",
-      "Accès distant",
-      "Clés",
-      "Tunnels"
-    ]
-  },
-  {
-    "id": 7,
-    "name": "Vue.js",
-    "category": "Frontend",
-    "level": 88,
-    "sortOrder": 1,
-    "keywords": [
-      "Vue 3",
-      "Composition API",
-      "Pinia",
-      "Vite",
-      "I18n"
-    ]
-  },
-  {
-    "id": 8,
-    "name": "Tailwind CSS",
-    "category": "Frontend",
-    "level": 85,
-    "sortOrder": 2,
-    "keywords": [
-      "Utility-first",
-      "Responsive"
-    ]
-  },
-  {
-    "id": 9,
-    "name": "JavaScript",
-    "category": "Frontend",
-    "level": 86,
-    "sortOrder": 3,
-    "keywords": [
-      "ES6+",
-      "UserScript",
-      "DOM",
-      "Fetch"
-    ]
-  },
-  {
-    "id": 10,
-    "name": "HTML / CSS",
-    "category": "Frontend",
-    "level": 88,
-    "sortOrder": 4,
-    "keywords": [
-      "Sémantique",
-      "Accessibilité",
-      "Responsive"
-    ]
-  },
-  {
-    "id": 11,
-    "name": "Flutter / Dart",
-    "category": "Mobile",
-    "level": 82,
-    "sortOrder": 1,
-    "keywords": [
-      "MoodCast",
-      "Carned Beef",
-      "Noublipo",
-      "ManyFaces",
-      "PloufPlouf"
-    ]
-  },
-  {
-    "id": 26,
-    "name": "SCRUM",
-    "category": "Méthodes",
-    "level": 85,
-    "sortOrder": 1,
-    "keywords": [
-      "Agilité",
-      "Sprints"
-    ]
-  },
-  {
-    "id": 27,
-    "name": "Kanban",
-    "category": "Méthodes",
-    "level": 82,
-    "sortOrder": 2,
-    "keywords": [
-      "Agilité",
-      "Flux",
-      "Tableaux"
-    ]
-  },
-  {
-    "id": 28,
-    "name": "Git",
-    "category": "Outils",
-    "level": 88,
-    "sortOrder": 1,
-    "keywords": [
-      "GitHub",
-      "GitLab",
-      "CI/CD"
-    ]
-  },
-  {
-    "id": 29,
-    "name": "Bash",
-    "category": "Outils",
-    "level": 80,
-    "sortOrder": 2,
-    "keywords": [
-      "Lignes de commande",
-      "Scripting",
-      "Linux"
-    ]
-  },
-  {
-    "id": 30,
-    "name": "SonarQube",
-    "category": "Outils",
-    "level": 72,
-    "sortOrder": 3,
-    "keywords": [
-      "Qualité de code",
-      "Vérifications",
-      "Dette technique"
-    ]
-  }
+  { id: 1, name: "Java", category: "Backend", level: 90, sortOrder: 1, keywords: ["Jakarta EE", "Spring Boot", "JPA", "Maven"] },
+  { id: 2, name: "Spring Boot", category: "Backend", level: 88, sortOrder: 2, keywords: ["REST", "Security", "Data JPA", "Validation"] },
+  { id: 3, name: "Python", category: "Backend", level: 85, sortOrder: 3, keywords: ["Streamlit", "pgvector", "Dokos"] },
+  { id: 4, name: "Tomcat", category: "Backend", level: 75, sortOrder: 4, keywords: ["Serveur d'applications", "Java EE"] },
+  { id: 5, name: "Frappe / ERPNext", category: "Backend", level: 70, sortOrder: 5, keywords: ["Framework Python", "ERP", "Frappe"] },
+  { id: 6, name: "Chatbot RAG", category: "Backend", level: 78, sortOrder: 6, keywords: ["DokiLight", "Recherche sémantique", "pgvector", "Scoring hybride"] },
+  { id: 7, name: "Vue.js", category: "Frontend", level: 88, sortOrder: 1, keywords: ["Vue 3", "Composition API", "Pinia", "Vite", "I18n"] },
+  { id: 8, name: "Tailwind CSS", category: "Frontend", level: 85, sortOrder: 2, keywords: ["Utility-first", "Responsive"] },
+  { id: 9, name: "JavaScript", category: "Frontend", level: 86, sortOrder: 3, keywords: ["ES6+", "UserScript", "DOM", "Fetch"] },
+  { id: 10, name: "HTML / CSS", category: "Frontend", level: 88, sortOrder: 4, keywords: ["Sémantique", "Accessibilité", "Responsive"] },
+  { id: 11, name: "Flutter / Dart", category: "Mobile", level: 82, sortOrder: 1, keywords: ["MoodCast", "Carned Beef", "Noublipo", "ManyFaces", "PloufPlouf"] },
+  { id: 12, name: "PostgreSQL", category: "Data", level: 80, sortOrder: 1, keywords: ["SQL", "pgvector", "Migrations"] },
+  { id: 13, name: "MySQL", category: "Data", level: 75, sortOrder: 2, keywords: ["SQL", "SGBD"] },
+  { id: 14, name: "SQL Server", category: "Data", level: 70, sortOrder: 3, keywords: ["Microsoft", "T-SQL", "SGBD"] },
+  { id: 15, name: "Docker", category: "DevOps", level: 78, sortOrder: 1, keywords: ["Conteneurisation", "Déploiement"] },
+  { id: 16, name: "Kubernetes", category: "DevOps", level: 70, sortOrder: 2, keywords: ["Orchestration", "Pods"] },
+  { id: 17, name: "Ansible", category: "DevOps", level: 72, sortOrder: 3, keywords: ["Load balancing", "Déploiement"] },
+  { id: 18, name: "Jenkins", category: "DevOps", level: 75, sortOrder: 4, keywords: ["CI", "Pipelines"] },
+  { id: 19, name: "GitHub Actions / CI-CD", category: "DevOps", level: 80, sortOrder: 5, keywords: ["CI/CD", "Workflows"] },
+  { id: 20, name: "GitLab", category: "DevOps", level: 78, sortOrder: 6, keywords: ["CI/CD", "Registry", "Dépôts"] },
+  { id: 21, name: "Prometheus", category: "DevOps", level: 72, sortOrder: 7, keywords: ["Monitoring", "Métriques", "Alerting"] },
+  { id: 22, name: "Grafana", category: "DevOps", level: 72, sortOrder: 8, keywords: ["Tableaux de bord", "Visualisation", "Monitoring"] },
+  { id: 23, name: "AWS", category: "DevOps", level: 68, sortOrder: 9, keywords: ["Cloud", "EC2", "S3", "Déploiement"] },
+  { id: 24, name: "VirtualBox", category: "DevOps", level: 75, sortOrder: 10, keywords: ["Virtualisation", "VM", "Environnements de test"] },
+  { id: 25, name: "SSH", category: "DevOps", level: 82, sortOrder: 11, keywords: ["Sécurisation", "Accès distant", "Clés", "Tunnels"] },
+  { id: 26, name: "SCRUM", category: "Méthodes", level: 85, sortOrder: 1, keywords: ["Agilité", "Sprints"] },
+  { id: 27, name: "Kanban", category: "Méthodes", level: 82, sortOrder: 2, keywords: ["Agilité", "Flux", "Tableaux"] },
+  { id: 28, name: "Git", category: "Outils", level: 88, sortOrder: 1, keywords: ["GitHub", "GitLab", "CI/CD"] },
+  { id: 29, name: "Bash", category: "Outils", level: 80, sortOrder: 2, keywords: ["Lignes de commande", "Scripting", "Linux"] },
+  { id: 30, name: "SonarQube", category: "Outils", level: 72, sortOrder: 3, keywords: ["Qualité de code", "Vérifications", "Dette technique"] }
 ]
 
+/** Extraits Site Hypnotisation (backend Java Spring Boot + frontend React) */
 /** Liste des extraits de code (identiques au site complet Site-Portfolio) */
 export const snippets = [
   {
@@ -777,5 +326,16 @@ export const snippets = [
     "description": "",
     "code": "class Eleve {\n  String prenom;\n  String nom;\n  bool participe;\n  bool volontaire;\n  String? genre; // \"F\" = fille, \"M\" = garçon\n\n  Eleve({this.prenom = '', this.nom = '', this.participe = false, this.volontaire = false, this.genre});\n\n  String get displayName {\n    final p = prenom.trim();\n    final n = nom.trim();\n    if (p.isEmpty && n.isEmpty) return '';\n    if (p.isEmpty) return n;\n    if (n.isEmpty) return p;\n    return '$p $n';\n  }\n}\n\nvoid _faireEquipes(int nbEquipes) {\n  final participantIndices = [for (var i = 0; i < _eleves.length; i++) if (_eleves[i].participe) i];\n  if (participantIndices.length < nbEquipes) { /* SnackBar erreur */ return; }\n  final equipesIndices = List.generate(nbEquipes, (_) => <int>[]);\n\n  if (_repartirFillesGarcons) {\n    final filles = [for (final i in participantIndices) if (_eleves[i].genre == 'F') i];\n    final garcons = [for (final i in participantIndices) if (_eleves[i].genre == 'M') i];\n    final autres = [for (final i in participantIndices) if (_eleves[i].genre != 'F' && _eleves[i].genre != 'M') i];\n    filles.shuffle(_random);\n    garcons.shuffle(_random);\n    autres.shuffle(_random);\n    for (var i = 0; i < filles.length; i++) equipesIndices[i % nbEquipes].add(filles[i]);\n    for (var i = 0; i < garcons.length; i++) equipesIndices[i % nbEquipes].add(garcons[i]);\n    for (var i = 0; i < autres.length; i++) equipesIndices[i % nbEquipes].add(autres[i]);\n    violations = _corrigerIncompatiblesDansEquipes(equipesIndices, nbEquipes);\n  } else {\n    participantIndices.shuffle(_random);\n    for (final idx in participantIndices) {\n      var bestTeam = -1, bestSize = -1;\n      for (var t = 0; t < nbEquipes; t++) {\n        if (!_estIncompatibleAvecEquipe(idx, equipesIndices[t])) {\n          final size = equipesIndices[t].length;\n          if (bestTeam == -1 || size < bestSize) { bestTeam = t; bestSize = size; }\n        }\n      }\n      if (bestTeam == -1) { /* équipe la moins remplie */ }\n      equipesIndices[bestTeam].add(idx);\n    }\n  }\n  setState(() { _equipesResultat = ...; });\n}",
     "sortOrder": 2
-  }
+  },
+  {"id":1001,"projectId":10,"section":"Backend Spring Boot","title":"Application principale : Spring Boot 3, JPA Auditing","slug":"hypno-application","language":"java","description":"Point d'entrée du backend : @SpringBootApplication, @EnableJpaAuditing pour les champs createdAt/updatedAt sur les entités JPA.","code":"package com.therapie;\n\nimport org.springframework.boot.SpringApplication;\nimport org.springframework.boot.autoconfigure.SpringBootApplication;\nimport org.springframework.data.jpa.repository.config.EnableJpaAuditing;\n\n@SpringBootApplication\n@EnableJpaAuditing\npublic class TherapieAppApplication {\n\n    public static void main(String[] args) {\n        SpringApplication.run(TherapieAppApplication.class, args);\n    }\n}","sortOrder":1},
+  {"id":1002,"projectId":10,"section":"Sécurité Java","title":"Configuration Spring Security : JWT, CORS, rôles","slug":"hypno-security-config","language":"java","description":"SecurityFilterChain : désactivation CSRF, session stateless, routes /api/auth/** et /api/public/** en permitAll, /api/admin/** réservé ADMIN, filtre JWT.","code":"@Bean\npublic SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n    http\n        .csrf(csrf -> csrf.disable())\n        .cors(cors -> cors.configurationSource(corsConfigurationSource()))\n        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))\n        .authorizeHttpRequests(auth -> auth\n            .requestMatchers(\"/api/auth/**\", \"/api/public/**\").permitAll()\n            .requestMatchers(\"/api/admin/**\").hasRole(\"ADMIN\")\n            .anyRequest().authenticated()\n        )\n        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);\n    return http.build();\n}","sortOrder":2},
+  {"id":1003,"projectId":10,"section":"Authentification JWT","title":"AuthController : inscription et login avec JWT","slug":"hypno-auth-controller","language":"java","description":"REST /api/auth : register (validation @Valid, encodage mot de passe BCrypt, génération token JWT), login (authentification puis token).","code":"@PostMapping(\"/register\")\npublic ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {\n    if (userRepository.existsByEmail(request.getEmail())) {\n        return ResponseEntity.badRequest().body(\"Email already exists\");\n    }\n    User user = new User();\n    user.setEmail(request.getEmail());\n    user.setPassword(passwordEncoder.encode(request.getPassword()));\n    user.setFirstName(request.getFirstName());\n    user.setLastName(request.getLastName());\n    user.setLanguage(request.getLanguage() != null ? request.getLanguage() : User.Language.FR);\n    userRepository.save(user);\n    Authentication authentication = authenticationManager.authenticate(\n        new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));\n    String token = tokenProvider.generateToken(authentication);\n    return ResponseEntity.ok(new AuthResponse(token, \"User registered successfully\"));\n}\n\n@PostMapping(\"/login\")\npublic ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {\n    Authentication authentication = authenticationManager.authenticate(\n        new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));\n    String token = tokenProvider.generateToken(authentication);\n    return ResponseEntity.ok(new AuthResponse(token, \"Login successful\"));\n}","sortOrder":3},
+  {"id":1004,"projectId":10,"section":"Sécurité Java","title":"JwtTokenProvider : génération et validation des tokens","slug":"hypno-jwt-provider","language":"java","description":"Génération de token JWT (subject = email, expiration configurable), parsing et validation avec clé HMAC (app.jwt.secret).","code":"public String generateToken(Authentication authentication) {\n    String email = authentication.getName();\n    Date now = new Date();\n    Date expiryDate = new Date(now.getTime() + jwtExpiration);\n    return Jwts.builder()\n        .subject(email)\n        .issuedAt(now)\n        .expiration(expiryDate)\n        .signWith(getSigningKey())\n        .compact();\n}\n\npublic String getEmailFromToken(String token) {\n    Claims claims = Jwts.parser()\n        .verifyWith(getSigningKey())\n        .build()\n        .parseSignedClaims(token)\n        .getPayload();\n    return claims.getSubject();\n}\n\npublic boolean validateToken(String token) {\n    try {\n        Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token);\n        return true;\n    } catch (JwtException | IllegalArgumentException e) {\n        return false;\n    }\n}","sortOrder":4},
+  {"id":1005,"projectId":10,"section":"API REST Java","title":"AppointmentController : CRUD rendez-vous sécurisé","slug":"hypno-appointment-controller","language":"java","description":"REST /api/appointments : GET (liste de l'utilisateur), POST (création avec Authentication), GET /{id}, PUT /{id}/cancel. Utilisateur récupéré via JWT.","code":"@GetMapping\npublic ResponseEntity<?> getUserAppointments(Authentication authentication) {\n    String email = authentication.getName();\n    User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException(\"User not found\"));\n    List<Appointment> appointments = appointmentService.getUserAppointments(user.getId());\n    return ResponseEntity.ok(appointments);\n}\n\n@PostMapping\npublic ResponseEntity<?> createAppointment(@Valid @RequestBody AppointmentRequest request, Authentication authentication) {\n    String email = authentication.getName();\n    User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException(\"User not found\"));\n    Appointment appointment = appointmentService.createAppointment(user.getId(), request.getServiceType(), request.getScheduledAt(), request.getPrice());\n    return ResponseEntity.ok(appointment);\n}","sortOrder":5},
+  {"id":1006,"projectId":10,"section":"Paiement Stripe","title":"StripeController : PaymentIntent et abonnements","slug":"hypno-stripe-controller","language":"java","description":"Endpoints /api/stripe : create-payment-intent (paiement unique), create-subscription (abonnement Stripe). Gestion StripeException et réponses HTTP structurées.","code":"@PostMapping(\"/create-payment-intent\")\npublic ResponseEntity<?> createPaymentIntent(@RequestBody PaymentRequest request) {\n    try {\n        Map<String, Object> response = stripeService.createPaymentIntent(\n            request.getAmount(),\n            request.getCurrency() != null ? request.getCurrency() : \"eur\",\n            request.getDescription()\n        );\n        return ResponseEntity.ok(response);\n    } catch (StripeException e) {\n        Map<String, String> error = new HashMap<>();\n        error.put(\"error\", e.getMessage());\n        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);\n    }\n}\n\n@PostMapping(\"/create-subscription\")\npublic ResponseEntity<?> createSubscription(@RequestBody SubscriptionRequest request) {\n    try {\n        Subscription subscription = stripeService.createSubscription(request.getCustomerId(), request.getPriceId());\n        Map<String, Object> response = new HashMap<>();\n        response.put(\"subscriptionId\", subscription.getId());\n        response.put(\"clientSecret\", subscription.getLatestInvoiceObject().getPaymentIntent().getClientSecret());\n        return ResponseEntity.ok(response);\n    } catch (StripeException e) {\n        Map<String, String> error = new HashMap<>();\n        error.put(\"error\", e.getMessage());\n        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);\n    }\n}","sortOrder":6},
+  {"id":1007,"projectId":10,"section":"Modèle JPA","title":"Entité Appointment : JPA, enums, audit","slug":"hypno-model-appointment","language":"java","description":"Entité JPA rendez-vous : relation ManyToOne User, ServiceType (CONSULTATION, HYPNOSIS, COACHING), statuts (PENDING, CONFIRMED…), Stripe paymentIntentId, @CreatedDate / @LastModifiedDate.","code":"@Entity\n@Table(name = \"appointments\")\n@Data\n@NoArgsConstructor\n@AllArgsConstructor\n@EntityListeners(AuditingEntityListener.class)\npublic class Appointment {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n    @ManyToOne(fetch = FetchType.LAZY)\n    @JoinColumn(name = \"user_id\", nullable = false)\n    private User user;\n    @Enumerated(EnumType.STRING)\n    private ServiceType serviceType;\n    private LocalDateTime scheduledAt;\n    @Enumerated(EnumType.STRING)\n    private AppointmentStatus status = AppointmentStatus.PENDING;\n    private String videoLink;\n    private Double price;\n    @Enumerated(EnumType.STRING)\n    private PaymentStatus paymentStatus = PaymentStatus.PENDING;\n    private String paymentIntentId; // Stripe\n    @CreatedDate\n    @Column(nullable = false, updatable = false)\n    private LocalDateTime createdAt;\n    @LastModifiedDate\n    private LocalDateTime updatedAt;\n\n    public enum ServiceType { CONSULTATION, HYPNOSIS, COACHING, FOLLOW_UP }\n    public enum AppointmentStatus { PENDING, CONFIRMED, COMPLETED, CANCELLED }\n    public enum PaymentStatus { PENDING, PAID, FAILED, REFUNDED }\n}","sortOrder":7},
+  {"id":1008,"projectId":10,"section":"Gestion des erreurs","title":"GlobalExceptionHandler : validation et erreurs métier","slug":"hypno-exception-handler","language":"java","description":"@RestControllerAdvice : MethodArgumentNotValidException (champs en erreur), BadCredentialsException (401), RuntimeException et Exception générique. Réponses JSON structurées.","code":"@ExceptionHandler(MethodArgumentNotValidException.class)\npublic ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {\n    Map<String, String> errors = new HashMap<>();\n    ex.getBindingResult().getAllErrors().forEach((error) -> {\n        String fieldName = ((FieldError) error).getField();\n        String errorMessage = error.getDefaultMessage();\n        errors.put(fieldName, errorMessage);\n    });\n    Map<String, Object> response = new HashMap<>();\n    response.put(\"error\", \"Validation failed\");\n    response.put(\"errors\", errors);\n    response.put(\"status\", HttpStatus.BAD_REQUEST.value());\n    return ResponseEntity.badRequest().body(response);\n}\n\n@ExceptionHandler(BadCredentialsException.class)\npublic ResponseEntity<Map<String, Object>> handleBadCredentials(BadCredentialsException ex) {\n    Map<String, Object> response = new HashMap<>();\n    response.put(\"error\", \"Invalid email or password\");\n    response.put(\"status\", HttpStatus.UNAUTHORIZED.value());\n    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);\n}","sortOrder":8},
+  {"id":1009,"projectId":10,"section":"Frontend React","title":"Client API : axios, intercepteur JWT, modules par ressource","slug":"hypno-frontend-api","language":"javascript","description":"Client axios avec baseURL, intercepteur request (Bearer token depuis authStore), intercepteur response (401 → logout + redirect login). APIs auth, user, appointments, content, stripe, etc.","code":"const api = axios.create({\n  baseURL: API_URL,\n  headers: { 'Content-Type': 'application/json' },\n});\n\napi.interceptors.request.use(\n  (config) => {\n    const token = useAuthStore.getState().token;\n    if (token) config.headers.Authorization = `Bearer ${token}`;\n    return config;\n  },\n  (error) => Promise.reject(error)\n);\n\napi.interceptors.response.use(\n  (response) => response,\n  (error) => {\n    if (error.response?.status === 401) {\n      useAuthStore.getState().logout();\n      window.location.href = '/login';\n    }\n    return Promise.reject(error);\n  }\n);\n\nexport const authAPI = {\n  login: (data) => api.post('/auth/login', data),\n  register: (data) => api.post('/auth/register', data),\n};\nexport const appointmentsAPI = {\n  getAll: () => api.get('/appointments'),\n  create: (data) => api.post('/appointments', data),\n  cancel: (id) => api.put(`/appointments/${id}/cancel`),\n};","sortOrder":9},
+  {"id":1010,"projectId":10,"section":"Frontend React","title":"Vite : proxy API vers le backend Spring Boot","slug":"hypno-vite-config","language":"javascript","description":"Configuration Vite avec plugin React et proxy /api vers localhost:8080 pour éviter les problèmes CORS en développement.","code":"import { defineConfig } from 'vite'\nimport react from '@vitejs/plugin-react'\n\nexport default defineConfig({\n  plugins: [react()],\n  server: {\n    port: 5173,\n    proxy: {\n      '/api': {\n        target: 'http://localhost:8080',\n        changeOrigin: true,\n      },\n    },\n  },\n})","sortOrder":10}
+
 ]
