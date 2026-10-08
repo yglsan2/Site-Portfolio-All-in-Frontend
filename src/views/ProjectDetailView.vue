@@ -14,6 +14,16 @@ const loading = ref(true)
 const error = ref(null)
 
 const slug = computed(() => route.params.slug)
+const zooming = ref(false)
+
+function zoomToSite(event) {
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  event.preventDefault()
+  zooming.value = true
+  const href = event.currentTarget.href
+  window.setTimeout(() => window.location.assign(href), 420)
+}
 
 async function load() {
   if (!slug.value) return
@@ -65,14 +75,24 @@ function goBack() {
       <button type="button" class="touch-target-inline text-sm text-portfolio-accent hover:underline focus-visible-ring rounded px-3 py-2" @click="load">Réessayer</button>
     </div>
     <template v-else-if="project">
-      <iframe
-        v-if="project.previewPath"
-        :src="project.previewPath"
-        :title="pick(project.previewTitle) || pick(project.title)"
-        class="relative left-1/2 mb-8 h-[36rem] w-[min(72rem,calc(100vw-2rem))] max-w-6xl -translate-x-1/2 rounded-2xl border border-white/[0.06]"
-        loading="lazy"
-      />
       <article class="max-w-3xl">
+        <div v-if="project.projectUrl" class="site-preview mb-8" :class="{ 'is-zooming': zooming }">
+          <iframe
+            :src="project.projectUrl"
+            class="site-preview-frame"
+            tabindex="-1"
+            aria-hidden="true"
+            title=""
+          />
+          <a
+            :href="project.projectUrl"
+            class="site-preview-link focus-visible-ring"
+            @click="zoomToSite"
+          >
+            {{ t('detail.site') }}
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
         <header class="mb-10">
           <img
             v-if="project.image"
@@ -116,6 +136,14 @@ function goBack() {
           </div>
           <div class="mt-5 flex flex-wrap gap-4">
             <a
+              v-if="project.projectUrl"
+              :href="project.projectUrl"
+              class="touch-target-inline link-accent text-sm inline-flex items-center gap-1 group py-2"
+            >
+              {{ t('detail.site') }}
+              <span class="transition-transform group-hover:translate-x-0.5">→</span>
+            </a>
+            <a
               v-if="project.repoUrl"
               :href="project.repoUrl"
               target="_blank"
@@ -123,16 +151,6 @@ function goBack() {
               class="touch-target-inline link-accent text-sm inline-flex items-center gap-1 group py-2"
             >
               {{ t('detail.github') }}
-              <span class="transition-transform group-hover:translate-x-0.5">→</span>
-            </a>
-            <a
-              v-if="project.projectUrl"
-              :href="project.projectUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="touch-target-inline link-accent text-sm inline-flex items-center gap-1 group py-2"
-            >
-              {{ t('projects.detail') }}
               <span class="transition-transform group-hover:translate-x-0.5">→</span>
             </a>
           </div>
@@ -156,3 +174,56 @@ function goBack() {
     </template>
   </div>
 </template>
+
+<style scoped>
+.site-preview {
+  position: relative;
+  container-type: inline-size;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.site-preview-frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1280px;
+  height: 720px;
+  border: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(calc(100cqi / 1280px));
+  transition: transform 0.45s ease;
+}
+
+.site-preview:hover .site-preview-frame {
+  transform: translate(-50%, -50%) scale(calc(100cqi / 1280px * 1.08));
+}
+
+.site-preview.is-zooming .site-preview-frame {
+  transform: translate(-50%, -50%) scale(calc(100cqi / 1280px * 1.7));
+  transition-duration: 0.4s;
+}
+
+.site-preview-link {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  padding: 0.85rem 1rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent 42%);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-preview-frame {
+    transition: none;
+  }
+}
+</style>

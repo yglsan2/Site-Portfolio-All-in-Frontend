@@ -129,19 +129,14 @@ export const projects = [
       },
     },
     teaser: {
-      fr: 'La page d\'accueil animée est sur la fiche : livres flottants, navigation, cinq langues.',
-      en: 'The animated homepage is on the project page: floating books, navigation, five languages.',
-    },
-    previewPath: '/lumieres/?lang=fr',
-    previewTitle: {
-      fr: 'Page d\'accueil de Lumières d\'Ukraine',
-      en: 'Lumières d\'Ukraine homepage',
+      fr: 'Miniature animée de l\'accueil, et le lien ouvre la vraie page : livres flottants, cinq langues.',
+      en: 'Animated homepage thumbnail, and the link opens the real page: floating books, five languages.',
     },
     type: 'WEBSITE',
     technologies: ['Vue 3', 'Vue I18n', 'Spring Boot', 'PostgreSQL'],
     sortOrder: 2,
     badge: null,
-    projectUrl: null,
+    projectUrl: '/lumieres/?lang=fr',
     repoUrl: 'https://github.com/yglsan2/Ukraine',
   },
   {
