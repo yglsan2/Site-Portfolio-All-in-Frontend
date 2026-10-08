@@ -1,9 +1,11 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useLocale } from '@/composables/useLocale'
 
 const route = useRoute()
 const menuOpen = ref(false)
+const { t, toggleLocale } = useLocale()
 
 function onKeydown(e) {
   if (e.key === 'Escape') menuOpen.value = false
@@ -16,12 +18,12 @@ onUnmounted(() => {
   window.removeEventListener('keydown', onKeydown)
 })
 
-const navLinks = [
-  { path: '/', label: 'Accueil' },
-  { path: '/projets', label: 'Projets' },
-  { path: '/codes', label: 'Codes' },
-  { path: '/competences', label: 'Compétences' },
-]
+const navLinks = computed(() => [
+  { path: '/', label: t('nav.home') },
+  { path: '/projets', label: t('nav.projects') },
+  { path: '/codes', label: t('nav.codes') },
+  { path: '/competences', label: t('nav.skills') },
+])
 
 const isActive = (path) => path === '/' ? route.path === '/' : route.path.startsWith(path)
 </script>
@@ -36,8 +38,16 @@ const isActive = (path) => path === '/' ? route.path === '/' : route.path.starts
         Portfolio
       </router-link>
 
-      <!-- Desktop -->
-      <ul class="hidden md:flex items-center gap-1">
+      <div class="flex items-center gap-1">
+        <button
+          type="button"
+          class="touch-target-inline px-3 py-2 text-sm font-medium rounded-lg text-portfolio-muted hover:text-portfolio-text"
+          @click="toggleLocale"
+        >
+          {{ t('nav.lang') }}
+        </button>
+
+        <ul class="hidden md:flex items-center gap-1">
         <li v-for="link in navLinks" :key="link.path">
           <router-link
             :to="link.path"
@@ -52,21 +62,21 @@ const isActive = (path) => path === '/' ? route.path === '/' : route.path.starts
             />
           </router-link>
         </li>
-      </ul>
+        </ul>
 
-      <!-- Mobile menu button : cible tactile 44px -->
-      <button
-        type="button"
-        class="md:hidden touch-target touch-hit-slop min-w-[48px] min-h-[48px] flex items-center justify-center -mr-2 rounded-xl text-portfolio-muted hover:text-portfolio-text hover:bg-white/5 active:bg-white/10 transition"
-        aria-label="Menu"
-        :aria-expanded="menuOpen"
-        @click="menuOpen = !menuOpen"
-      >
+        <button
+          type="button"
+          class="md:hidden touch-target touch-hit-slop min-w-[48px] min-h-[48px] flex items-center justify-center -mr-2 rounded-xl text-portfolio-muted hover:text-portfolio-text hover:bg-white/5 active:bg-white/10 transition"
+          :aria-label="t('nav.menu')"
+          :aria-expanded="menuOpen"
+          @click="menuOpen = !menuOpen"
+        >
         <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path v-if="!menuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
-      </button>
+        </button>
+      </div>
     </nav>
 
     <!-- Mobile menu -->

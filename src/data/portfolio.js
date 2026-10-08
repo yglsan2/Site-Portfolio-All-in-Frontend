@@ -7,24 +7,148 @@
 export const profile = {
   id: 1,
   name: 'Benjamin Moine',
-  title: "Développeur d'applications",
-  bio: "Stage chez Dokos : j'ai conçu Doki, un bot RAG branché sur l'ERP. L'assistant s'appuie sur le framework Frappe (DocTypes, hooks, API, permissions) pour interroger les documents métier et proposer des actions — devis, commande, facture — uniquement après confirmation.\n\nÀ côté de ce stage : Java (Jakarta EE, Spring Boot), Python, JavaScript, modélisation de données et DevOps (Docker, Kubernetes, Ansible, Jenkins, CI/CD). Anglais C1.",
-  email: null,
+  title: {
+    fr: "Développeur d'applications",
+    en: 'Application developer',
+  },
+  bio: {
+    fr: "Stage chez Dokos : j'ai conçu Doki, un bot RAG branché sur l'ERP. L'assistant s'appuie sur le framework Frappe (DocTypes, hooks, API, permissions) pour interroger les documents métier et proposer des actions — devis, commande, facture — uniquement après confirmation.\n\nÀ côté de ce stage : Java (Jakarta EE, Spring Boot), Python, JavaScript, modélisation de données et DevOps (Docker, Kubernetes, Ansible, Jenkins, CI/CD). Anglais C1.",
+    en: "Internship at Dokos: I built Doki, a RAG assistant connected to the ERP. It uses the Frappe framework (DocTypes, hooks, API, permissions) to query business documents and propose actions — quotes, sales orders, invoices — only after confirmation.\n\nAlongside that internship: Java (Jakarta EE, Spring Boot), Python, JavaScript, data modeling and DevOps (Docker, Kubernetes, Ansible, Jenkins, CI/CD). English C1.",
+  },
+  availability: {
+    fr: "Basé à Tours. À l'écoute d'un poste de développeur d'applications.",
+    en: 'Based in Tours. Open to application developer roles.',
+  },
+  location: 'Tours',
+  email: 'superkoal@hotmail.com',
+  phone: '07 89 20 24 89',
+  phoneHref: 'tel:+33789202489',
   linkedinUrl: null,
-  githubUrl: 'https://github.com/yglsan2'
+  githubUrl: 'https://github.com/yglsan2',
 }
 
 export const projects = [
-  { id: 1, title: "BarrelMCD (Python)", slug: "barrelmcd-python", description: "Outil de modélisation MCD en Python. Interface graphique (Tkinter), génération de schémas, export. Projet personnel complet et utilisable.", type: "SOFTWARE", technologies: ["Python", "Tkinter", "SQL"], sortOrder: 1, projectUrl: null, repoUrl: "https://github.com/yglsan2/BarrelMCD-python" },
-  { id: 2, title: "Lumières d'Ukraine", slug: "lumieres-ukraine", description: "Plateforme culturelle : bibliothèque virtuelle et événements. Vue 3, i18n (FR, EN, UK, DE, PL), backend Spring Boot avec JWT.", type: "WEBSITE", technologies: ["Vue 3", "Pinia", "Vue I18n", "Spring Boot", "PostgreSQL"], sortOrder: 2, projectUrl: null, repoUrl: "https://github.com/yglsan2/Ukraine" },
-  { id: 10, title: "Site Hypnotisation (Chloé Deroy)", slug: "site-hypnotisation", description: "Site web professionnel pour hypnothérapeute : réservation, paiement Stripe, React + Vite, backend Spring Boot (Java 21), JWT, PostgreSQL, RGPD.", type: "WEBSITE", technologies: ["React", "Vite", "Tailwind", "Spring Boot", "Java 21", "JWT", "Stripe", "PostgreSQL"], sortOrder: 3, projectUrl: null, repoUrl: "https://github.com/yglsan2/SiteHypnotisation" },
-  { id: 3, title: "Doki — bot RAG (stage Dokos)", slug: "dokilight", description: "Stage chez Dokos. Doki est l'assistant conversationnel du Desk : une application Frappe qui indexe les documents de l'ERP (clients, devis, commandes, factures, stock), répond avec citations, et respecte les droits de l'utilisateur. La recherche est hybride (embeddings + concepts). Les écritures — devis, commande, facture, tâche — passent par frappe.new_doc et ne sont exécutées qu'après confirmation.", type: "SOFTWARE", technologies: ["Frappe", "Python", "RAG", "DocTypes", "PostgreSQL", "pgvector"], sortOrder: 0, featured: true, badge: "Stage Dokos", projectUrl: null, repoUrl: "https://github.com/yglsan2/DokiLight" },
-  { id: 4, title: "Noublipo (NopList)", slug: "noublipo", description: "Application liste de courses / shopping list.", type: "SOFTWARE", technologies: ["Flutter", "Dart"], sortOrder: 5, projectUrl: null, repoUrl: "https://github.com/yglsan2/Noublipo" },
-  { id: 5, title: "ManyFaces", slug: "manyfaces", description: "Logiciel de création de personnages et PNJ pour jeux de rôle.", type: "SOFTWARE", technologies: ["Flutter", "Dart"], sortOrder: 6, projectUrl: null, repoUrl: "https://github.com/yglsan2/RPGproject-Flutter-3-me-application-sous-flutter-" },
-  { id: 6, title: "MoodCast", slug: "moodcast", description: "Application Flutter (météo / ambiance).", type: "SOFTWARE", technologies: ["Flutter", "Dart"], sortOrder: 7, projectUrl: null, repoUrl: "https://github.com/yglsan2/MoodCast" },
-  { id: 7, title: "Carned Beef", slug: "carned-beef", description: "Partage de partitions musicales.", type: "SOFTWARE", technologies: ["Flutter", "Dart"], sortOrder: 8, projectUrl: null, repoUrl: "https://github.com/yglsan2/CarnedBeef" },
-  { id: 8, title: "PloufPlouf", slug: "ploufplouf", description: "Logiciel de tirage au sort pédagogique.", type: "SOFTWARE", technologies: ["Flutter", "Dart"], sortOrder: 9, projectUrl: null, repoUrl: "https://github.com/yglsan2/PloufPlouf" },
-  { id: 9, title: "Mes applications UserScript", slug: "userscripts", description: "Ensemble d'extensions utilisateur en JavaScript (UserScript) : Lichess, etc.", type: "OPEN_SOURCE", technologies: ["JavaScript", "UserScript"], sortOrder: 10, projectUrl: null, repoUrl: "https://github.com/yglsan2/Mes-applications-Userscript-JS-" }
+  {
+    id: 3,
+    title: { fr: 'Doki — bot RAG (stage Dokos)', en: 'Doki — RAG bot (Dokos internship)' },
+    slug: 'dokilight',
+    description: {
+      fr: "Stage chez Dokos. Doki est l'assistant conversationnel du Desk : une application Frappe qui indexe les documents de l'ERP, répond avec citations, et ne crée un document qu'après confirmation.",
+      en: 'Dokos internship. Doki is the Desk assistant: a Frappe app that indexes ERP documents, answers with citations, and creates a document only after confirmation.',
+    },
+    caseStudy: {
+      problem: {
+        fr: "Dans le Desk Dokos, retrouver une information métier (client, devis, stock) et préparer une écriture demande de naviguer dans l'ERP, avec le risque d'agir hors des droits de l'utilisateur.",
+        en: 'In the Dokos Desk, finding a business fact (customer, quotation, stock) and preparing a write means clicking through the ERP, with the risk of acting outside the user\'s permissions.',
+      },
+      role: {
+        fr: "Stage chez Dokos. Conception de Doki, une application Frappe branchée sur les documents de l'ERP.",
+        en: 'Internship at Dokos. I designed Doki, a Frappe application connected to the ERP documents.',
+      },
+      decision: {
+        fr: "Recherche hybride (embeddings et concepts) pour répondre avec des citations. Les écritures passent par frappe.new_doc et ne partent qu'après confirmation, une fois frappe.has_permission vérifié.",
+        en: 'Hybrid retrieval (embeddings and concepts) so answers cite their sources. Writes go through frappe.new_doc and run only after confirmation, once frappe.has_permission has been checked.',
+      },
+      result: {
+        fr: "L'assistant interroge clients, devis, commandes, factures et stock, cite ses sources, et refuse une action si l'utilisateur n'a pas le droit.",
+        en: 'The assistant queries customers, quotations, orders, invoices and stock, cites its sources, and refuses an action when the user lacks permission.',
+      },
+    },
+    type: 'SOFTWARE',
+    technologies: ['Frappe', 'Python', 'RAG', 'DocTypes', 'PostgreSQL', 'pgvector'],
+    sortOrder: 0,
+    featured: true,
+    badge: 'Stage Dokos',
+    projectUrl: null,
+    repoUrl: 'https://github.com/yglsan2/DokiLight',
+  },
+  {
+    id: 10,
+    title: { fr: 'Site Hypnotisation (Chloé Deroy)', en: 'Hypnotherapy site (Chloé Deroy)' },
+    slug: 'site-hypnotisation',
+    description: {
+      fr: "Site professionnel pour une hypnothérapeute : présentation, prise de rendez-vous et paiement.",
+      en: 'Professional site for a hypnotherapist: presentation, booking and payment.',
+    },
+    caseStudy: {
+      problem: {
+        fr: "Une hypnothérapeute avait besoin d'un site professionnel : se présenter, prendre des rendez-vous et encaisser, avec un espace réservé au patient.",
+        en: 'A hypnotherapist needed a professional site: a presentation, appointment booking, payment, and an area reserved for the patient.',
+      },
+      role: {
+        fr: "Application web React (Vite, Tailwind) et API Spring Boot en Java 21.",
+        en: 'React web app (Vite, Tailwind) and a Spring Boot API in Java 21.',
+      },
+      decision: {
+        fr: "L'espace patient est authentifié par JWT. Le paiement Stripe est porté par le backend. Les données sont dans PostgreSQL, et le parcours tient compte du RGPD.",
+        en: 'The patient area is authenticated with JWT. Stripe payment is handled by the backend. Data lives in PostgreSQL, and the flow takes GDPR into account.',
+      },
+      result: {
+        fr: "Réservation, paiement et rendez-vous de l'utilisateur connecté dans la même application.",
+        en: 'Booking, payment and the signed-in user\'s appointments in the same application.',
+      },
+    },
+    type: 'WEBSITE',
+    technologies: ['React', 'Vite', 'Tailwind', 'Spring Boot', 'Java 21', 'JWT', 'Stripe', 'PostgreSQL'],
+    sortOrder: 1,
+    badge: null,
+    projectUrl: null,
+    repoUrl: 'https://github.com/yglsan2/SiteHypnotisation',
+  },
+  {
+    id: 2,
+    title: { fr: "Lumières d'Ukraine", en: "Lumières d'Ukraine" },
+    slug: 'lumieres-ukraine',
+    description: {
+      fr: "Plateforme culturelle : bibliothèque, événements et adhésion, en cinq langues.",
+      en: 'Cultural platform: library, events and membership, in five languages.',
+    },
+    caseStudy: {
+      problem: {
+        fr: "L'association avait besoin d'une plateforme culturelle — bibliothèque, événements, adhésion — pour un public qui ne partage pas une seule langue.",
+        en: 'The association needed a cultural platform — library, events, membership — for an audience that does not share a single language.',
+      },
+      role: {
+        fr: "Front Vue 3 et API Spring Boot avec JWT.",
+        en: 'Vue 3 frontend and a Spring Boot API with JWT.',
+      },
+      decision: {
+        fr: "vue-i18n sur cinq langues (français, anglais, ukrainien, allemand, polonais) : la langue du navigateur est reprise, puis mémorisée. La bibliothèque filtre par texte, catégorie et langue, et peut trier les livres par proximité.",
+        en: 'vue-i18n across five languages (French, English, Ukrainian, German, Polish): the browser language is picked up, then remembered. The library filters by text, category and language, and can sort books by distance.',
+      },
+      result: {
+        fr: "Le même site se lit en cinq langues, avec une carte d'adhésion et un catalogue filtrable.",
+        en: 'The same site reads in five languages, with a membership card and a filterable catalogue.',
+      },
+    },
+    image: '/images/lumieres-ukraine-carte.png',
+    type: 'WEBSITE',
+    technologies: ['Vue 3', 'Vue I18n', 'Spring Boot', 'PostgreSQL'],
+    sortOrder: 2,
+    badge: null,
+    projectUrl: null,
+    repoUrl: 'https://github.com/yglsan2/Ukraine',
+  },
+  {
+    id: 1,
+    title: 'BarrelMCD (Python)',
+    slug: 'barrelmcd-python',
+    description: {
+      fr: "Outil de modélisation MCD en Python. Interface PyQt5 (thème sombre, entités graphiques), schémas et export.",
+      en: 'MCD modeling tool in Python. PyQt5 interface (dark theme, graphical entities), diagrams and export.',
+    },
+    type: 'SOFTWARE',
+    technologies: ['Python', 'PyQt5', 'SQL'],
+    sortOrder: 3,
+    projectUrl: null,
+    repoUrl: 'https://github.com/yglsan2/BarrelMCD-python',
+  },
+  { id: 4, title: 'Noublipo (NopList)', slug: 'noublipo', description: { fr: 'Application de liste de courses.', en: 'Shopping list application.' }, type: 'SOFTWARE', technologies: ['Flutter', 'Dart'], sortOrder: 5, projectUrl: null, repoUrl: 'https://github.com/yglsan2/Noublipo' },
+  { id: 5, title: 'ManyFaces', slug: 'manyfaces', description: { fr: 'Création de personnages et de PNJ pour jeux de rôle.', en: 'Character and NPC creator for tabletop role-playing games.' }, type: 'SOFTWARE', technologies: ['Flutter', 'Dart'], sortOrder: 6, projectUrl: null, repoUrl: 'https://github.com/yglsan2/RPGproject-Flutter-3-me-application-sous-flutter-' },
+  { id: 6, title: 'MoodCast', slug: 'moodcast', description: { fr: 'Application Flutter autour de la météo et de l\'ambiance.', en: 'Flutter app around weather and mood.' }, type: 'SOFTWARE', technologies: ['Flutter', 'Dart'], sortOrder: 7, projectUrl: null, repoUrl: 'https://github.com/yglsan2/MoodCast' },
+  { id: 7, title: 'Carned Beef', slug: 'carned-beef', description: { fr: 'Partage de partitions musicales.', en: 'Sharing sheet music.' }, type: 'SOFTWARE', technologies: ['Flutter', 'Dart'], sortOrder: 8, projectUrl: null, repoUrl: 'https://github.com/yglsan2/CarnedBeef' },
+  { id: 8, title: 'PloufPlouf', slug: 'ploufplouf', description: { fr: 'Tirage au sort d\'équipes, pour la classe.', en: 'Team draw tool for the classroom.' }, type: 'SOFTWARE', technologies: ['Flutter', 'Dart'], sortOrder: 9, projectUrl: null, repoUrl: 'https://github.com/yglsan2/PloufPlouf' },
+  { id: 9, title: 'Mes applications UserScript', slug: 'userscripts', description: { fr: 'Extensions utilisateur en JavaScript (Lichess, et d\'autres).', en: 'JavaScript user scripts (Lichess and others).' }, type: 'OPEN_SOURCE', technologies: ['JavaScript', 'UserScript'], sortOrder: 10, projectUrl: null, repoUrl: 'https://github.com/yglsan2/Mes-applications-Userscript-JS-' },
 ]
 
 export const skills = [
@@ -187,12 +311,12 @@ export const snippets = [
   {
     "id": 12,
     "projectId": 2,
-    "section": "État partagé (Pinia)",
-    "title": "Store Pinia : état réactif et valeur dérivée (computed)",
-    "slug": "ukraine-store-pinia",
-    "language": "typescript",
-    "description": "Un store Pinia contient des données (ref) et des fonctions. Ici : count (nombre), doubleCount (calculé automatiquement : count × 2), increment() pour modifier count. Toute la partie front peut utiliser ce store pour partager cet état.",
-    "code": "import { ref, computed } from 'vue'\nimport { defineStore } from 'pinia'\n\nexport const useCounterStore = defineStore('counter', () => {\n  const count = ref(0)\n  const doubleCount = computed(() => count.value * 2)\n  function increment() {\n    count.value++\n  }\n  return { count, doubleCount, increment }\n})",
+    "section": "Bibliothèque",
+    "title": "Filtre des livres : recherche, catégorie, langue, proximité",
+    "slug": "ukraine-books-filter",
+    "language": "javascript",
+    "description": "Extrait de BooksView.vue : le catalogue filtre le titre et l'auteur, la catégorie et la langue. Si une position est connue, les livres sont triés par distance.",
+    "code": "const filteredBooks = computed(() => {\n  let filtered = books.value.filter((book) => {\n    const matchesSearch =\n      !searchQuery.value ||\n      book.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||\n      book.author.toLowerCase().includes(searchQuery.value.toLowerCase())\n    const matchesCategory = !selectedCategory.value || book.category === selectedCategory.value\n    const matchesLanguage = !selectedLanguage.value || book.language === selectedLanguage.value\n    return matchesSearch && matchesCategory && matchesLanguage\n  })\n\n  if (userCoordinates.value && userLocation.value) {\n    filtered.sort((a, b) => {\n      if (!a.location || !b.location) return 0\n      const distanceA = calculateDistance(\n        userCoordinates.value.lat, userCoordinates.value.lng,\n        a.location.coordinates.lat, a.location.coordinates.lng\n      )\n      const distanceB = calculateDistance(\n        userCoordinates.value.lat, userCoordinates.value.lng,\n        b.location.coordinates.lat, b.location.coordinates.lng\n      )\n      return distanceA - distanceB\n    })\n  }\n  return filtered\n})\n\nfunction calculateDistance(lat1, lon1, lat2, lon2) {\n  const R = 6371\n  const dLat = (lat2 - lat1) * Math.PI / 180\n  const dLon = (lon2 - lon1) * Math.PI / 180\n  const a = Math.sin(dLat / 2) ** 2\n    + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2\n  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))\n}",
     "sortOrder": 5
   },
   {

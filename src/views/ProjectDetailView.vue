@@ -2,10 +2,12 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { api } from '@/api/service'
+import { useLocale } from '@/composables/useLocale'
 import CodeBlock from '@/components/CodeBlock.vue'
 
 const route = useRoute()
 const router = useRouter()
+const { t, pick } = useLocale()
 const project = ref(null)
 const snippets = ref([])
 const loading = ref(true)
@@ -51,7 +53,7 @@ function goBack() {
       @click="goBack"
     >
       <span class="inline-block transition-transform group-hover:-translate-x-0.5">←</span>
-      Retour aux projets
+      {{ t('projects.back') }}
     </button>
 
     <div v-if="loading" class="text-portfolio-muted flex items-center gap-2">
@@ -65,6 +67,12 @@ function goBack() {
     <template v-else-if="project">
       <article class="max-w-3xl">
         <header class="mb-10">
+          <img
+            v-if="project.image"
+            :src="project.image"
+            :alt="t('detail.visual')"
+            class="mb-6 w-full rounded-2xl border border-white/[0.06]"
+          >
           <p
             v-if="project.badge"
             class="inline-flex items-center mb-3 text-xs font-medium tracking-wide uppercase text-portfolio-accent bg-portfolio-accent/10 border border-portfolio-accent/30 rounded-full px-2.5 py-1"
@@ -72,19 +80,25 @@ function goBack() {
             {{ project.badge }}
           </p>
           <h1 class="text-2xl sm:text-3xl font-bold text-portfolio-text mb-2">
-            {{ project.title }}
+            {{ pick(project.title) }}
           </h1>
-          <p class="text-portfolio-muted mb-4">{{ project.type }}</p>
-          <p class="text-portfolio-muted leading-relaxed whitespace-pre-line">
-            {{ project.description }}
+          <p class="text-portfolio-muted mb-6">{{ project.type }}</p>
+          <dl v-if="project.caseStudy" class="space-y-5 mb-6">
+            <div v-for="key in ['problem', 'role', 'decision', 'result']" :key="key">
+              <dt class="text-xs font-medium uppercase tracking-wide text-portfolio-accent mb-1">{{ t('case.' + key) }}</dt>
+              <dd class="text-portfolio-muted leading-relaxed">{{ pick(project.caseStudy[key]) }}</dd>
+            </div>
+          </dl>
+          <p v-else class="text-portfolio-muted leading-relaxed whitespace-pre-line">
+            {{ pick(project.description) }}
           </p>
           <div class="flex flex-wrap gap-2 mt-4">
             <span
-              v-for="t in (project.technologies || [])"
-              :key="t"
+              v-for="tech in (project.technologies || [])"
+              :key="tech"
               class="text-xs px-2.5 py-1 rounded-lg bg-white/5 text-portfolio-muted border border-white/[0.04]"
             >
-              {{ t }}
+              {{ tech }}
             </span>
           </div>
           <div class="mt-5 flex flex-wrap gap-4">
@@ -95,7 +109,7 @@ function goBack() {
               rel="noopener noreferrer"
               class="touch-target-inline link-accent text-sm inline-flex items-center gap-1 group py-2"
             >
-              Voir sur GitHub
+              {{ t('detail.github') }}
               <span class="transition-transform group-hover:translate-x-0.5">→</span>
             </a>
             <a
@@ -105,14 +119,14 @@ function goBack() {
               rel="noopener noreferrer"
               class="touch-target-inline link-accent text-sm inline-flex items-center gap-1 group py-2"
             >
-              Voir le projet
+              {{ t('projects.detail') }}
               <span class="transition-transform group-hover:translate-x-0.5">→</span>
             </a>
           </div>
         </header>
 
         <section v-if="snippets.length" class="mt-10">
-          <h2 class="text-lg font-semibold text-portfolio-accent mb-4">Extraits de code</h2>
+          <h2 class="text-lg font-semibold text-portfolio-accent mb-4">{{ t('detail.snippets') }}</h2>
           <ul class="space-y-6">
             <li v-for="(s, i) in snippets" :key="s.id" :class="['card-pro opacity-0 animate-fade-in-up', `stagger-${Math.min(i + 1, 10)}`]">
               <div class="flex items-center gap-2 mb-2">

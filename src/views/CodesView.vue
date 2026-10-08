@@ -1,7 +1,10 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { api } from '@/api/service'
+import { useLocale } from '@/composables/useLocale'
 import CodeBlock from '@/components/CodeBlock.vue'
+
+const { t, pick } = useLocale()
 
 const projects = ref([])
 const selectedProject = ref(null)
@@ -44,7 +47,7 @@ watch(selectedProject, (p) => {
 
 <template>
   <div>
-    <h1 class="page-title text-2xl sm:text-3xl font-bold text-portfolio-text mb-2">Codes</h1>
+    <h1 class="page-title text-2xl sm:text-3xl font-bold text-portfolio-text mb-2">{{ t('codes.title') }}</h1>
     <p class="text-portfolio-muted text-sm sm:text-base mb-8">
       Extraits de code issus des projets, classés par thème (classes métier, méthodes, architecture).
     </p>
@@ -63,7 +66,7 @@ watch(selectedProject, (p) => {
               :class="selectedProject?.id === p.id ? 'bg-portfolio-accent/20 text-portfolio-accent border border-portfolio-accent/30' : 'text-portfolio-muted hover:bg-white/5 hover:text-portfolio-text border border-transparent'"
               @click="loadSnippets(p)"
             >
-              {{ p.title }}
+              {{ pick(p.title) }}
             </button>
           </li>
         </ul>

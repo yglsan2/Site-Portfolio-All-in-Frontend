@@ -1,5 +1,8 @@
 <script setup>
 import AppNavbar from '@/components/AppNavbar.vue'
+import { useLocale } from '@/composables/useLocale'
+
+const { t } = useLocale()
 </script>
 
 <template>
@@ -15,10 +18,10 @@ import AppNavbar from '@/components/AppNavbar.vue'
     </main>
     <footer class="mt-auto border-t border-white/[0.06] py-8 pb-[max(2rem,env(safe-area-inset-bottom))]">
       <div class="container-pro flex flex-col sm:flex-row items-center justify-between gap-4 text-portfolio-muted text-sm">
-        <p>Portfolio — Développeur full-stack & DevOps</p>
+        <p>{{ t('footer.tagline') }}</p>
         <div class="flex items-center gap-6">
-          <a href="#" class="hover:text-portfolio-accent transition-colors">Mentions</a>
-          <a href="#" class="hover:text-portfolio-accent transition-colors">Contact</a>
+          <router-link to="/mentions" class="hover:text-portfolio-accent transition-colors">{{ t('footer.legal') }}</router-link>
+          <router-link to="/contact" class="hover:text-portfolio-accent transition-colors">{{ t('footer.contact') }}</router-link>
         </div>
       </div>
     </footer>

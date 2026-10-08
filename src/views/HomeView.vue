@@ -5,6 +5,9 @@
  */
 import { ref, onMounted } from 'vue'
 import { api } from '@/api/service'
+import { useLocale } from '@/composables/useLocale'
+
+const { t, pick } = useLocale()
 
 const profile = ref(null)
 const featured = ref(null)
@@ -44,7 +47,7 @@ onMounted(load)
       to="/projets"
       class="absolute top-6 right-4 sm:right-8 touch-target-inline text-sm text-portfolio-muted hover:text-portfolio-accent transition-all duration-200 opacity-70 hover:opacity-100 z-10 inline-flex items-center gap-1 hover:gap-2 py-2"
     >
-      Voir les projets
+      {{ t('home.seeProjects') }}
       <span aria-hidden="true">→</span>
     </router-link>
 
@@ -60,16 +63,19 @@ onMounted(load)
 
       <template v-else-if="profile">
         <p class="home-item text-sm font-medium tracking-wide text-portfolio-accent uppercase mb-5" style="animation-delay: 0.1s">
-          Bonjour, je suis
+          {{ t('home.hello') }}
         </p>
         <h1 class="home-item text-4xl sm:text-5xl lg:text-6xl font-bold mb-5 tracking-tight leading-tight home-title" style="animation-delay: 0.2s">
           {{ profile.name }}
         </h1>
-        <p class="home-item text-xl sm:text-2xl text-portfolio-accent font-medium mb-8" style="animation-delay: 0.35s">
-          {{ profile.title }}
+        <p class="home-item text-xl sm:text-2xl text-portfolio-accent font-medium mb-3" style="animation-delay: 0.35s">
+          {{ pick(profile.title) }}
+        </p>
+        <p class="home-item text-portfolio-text mb-8" style="animation-delay: 0.42s">
+          {{ pick(profile.availability) }}
         </p>
         <div class="home-item text-portfolio-muted leading-relaxed whitespace-pre-line max-w-2xl mb-8 text-balance" style="animation-delay: 0.5s">
-          {{ profile.bio }}
+          {{ pick(profile.bio) }}
         </div>
         <router-link
           v-if="featured"
@@ -78,12 +84,27 @@ onMounted(load)
           style="animation-delay: 0.58s"
         >
           <p class="text-xs font-medium tracking-wide uppercase text-portfolio-accent mb-1">{{ featured.badge || 'Projet mis en avant' }}</p>
-          <p class="text-lg font-semibold text-portfolio-text">{{ featured.title }}</p>
-          <p class="text-sm text-portfolio-muted mt-1 line-clamp-2">Bot RAG intégré à l'ERP Dokos, avec le framework Frappe.</p>
-          <p class="text-sm text-portfolio-accent mt-3">Voir le projet et les extraits Frappe →</p>
+          <p class="text-lg font-semibold text-portfolio-text">{{ pick(featured.title) }}</p>
+          <p class="text-sm text-portfolio-muted mt-1 line-clamp-3">{{ pick(featured.caseStudy?.result || featured.description) }}</p>
+          <p class="text-sm text-portfolio-accent mt-3">{{ t('home.featuredCta') }} →</p>
         </router-link>
-        <div v-if="profile.githubUrl" class="home-item flex flex-wrap gap-4" style="animation-delay: 0.65s">
+        <div class="home-item flex flex-wrap gap-3" style="animation-delay: 0.65s">
           <a
+            v-if="profile.email"
+            :href="`mailto:${profile.email}`"
+            class="touch-target-inline inline-flex items-center gap-2 px-5 py-3 min-h-[44px] rounded-xl bg-portfolio-accent text-portfolio-bg font-medium hover:bg-portfolio-accent-hover transition-colors"
+          >
+            {{ t('home.email') }}
+          </a>
+          <a
+            v-if="profile.phoneHref"
+            :href="profile.phoneHref"
+            class="touch-target-inline inline-flex items-center gap-2 px-5 py-3 min-h-[44px] rounded-xl border border-white/15 text-portfolio-text hover:border-portfolio-accent/40 transition-colors"
+          >
+            {{ t('home.phone') }}
+          </a>
+          <a
+            v-if="profile.githubUrl"
             :href="profile.githubUrl"
             target="_blank"
             rel="noopener noreferrer"
@@ -92,19 +113,22 @@ onMounted(load)
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
             </svg>
-            Voir mon GitHub
+            {{ t('home.github') }}
           </a>
         </div>
         <!-- Liens rapides -->
-        <nav class="home-item mt-16 xs:mt-20 pt-10 xs:pt-12 border-t border-white/[0.06] flex flex-wrap gap-5 sm:gap-8 text-sm" style="animation-delay: 0.8s" aria-label="Navigation rapide">
+        <nav class="home-item mt-16 xs:mt-20 pt-10 xs:pt-12 border-t border-white/[0.06] flex flex-wrap gap-5 sm:gap-8 text-sm" style="animation-delay: 0.8s" :aria-label="t('home.quick')">
           <router-link to="/projets" class="nav-quick touch-target-inline touch-hit-slop text-portfolio-muted hover:text-portfolio-accent transition-colors flex items-center gap-2 group py-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-portfolio-accent/60 group-hover:bg-portfolio-accent group-hover:shadow-[0_0_8px_var(--accent)] shrink-0" aria-hidden="true" /> Projets
+            <span class="w-1.5 h-1.5 rounded-full bg-portfolio-accent/60 group-hover:bg-portfolio-accent group-hover:shadow-[0_0_8px_var(--accent)] shrink-0" aria-hidden="true" /> {{ t('nav.projects') }}
           </router-link>
           <router-link to="/codes" class="nav-quick touch-target-inline touch-hit-slop text-portfolio-muted hover:text-portfolio-accent transition-colors flex items-center gap-2 group py-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-portfolio-accent/60 group-hover:bg-portfolio-accent shrink-0" aria-hidden="true" /> Codes
+            <span class="w-1.5 h-1.5 rounded-full bg-portfolio-accent/60 group-hover:bg-portfolio-accent shrink-0" aria-hidden="true" /> {{ t('nav.codes') }}
           </router-link>
           <router-link to="/competences" class="nav-quick touch-target-inline touch-hit-slop text-portfolio-muted hover:text-portfolio-accent transition-colors flex items-center gap-2 group py-2">
-            <span class="w-1.5 h-1.5 rounded-full bg-portfolio-accent/60 group-hover:bg-portfolio-accent shrink-0" aria-hidden="true" /> Compétences
+            <span class="w-1.5 h-1.5 rounded-full bg-portfolio-accent/60 group-hover:bg-portfolio-accent shrink-0" aria-hidden="true" /> {{ t('nav.skills') }}
+          </router-link>
+          <router-link to="/contact" class="nav-quick touch-target-inline touch-hit-slop text-portfolio-muted hover:text-portfolio-accent transition-colors flex items-center gap-2 group py-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-portfolio-accent/60 group-hover:bg-portfolio-accent shrink-0" aria-hidden="true" /> {{ t('footer.contact') }}
           </router-link>
         </nav>
       </template>
