@@ -43,14 +43,24 @@ onMounted(load)
       <li
         v-for="(p, i) in projects"
         :key="p.id"
-        :class="['card-pro opacity-0 animate-fade-in-up', `stagger-${Math.min(i + 1, 10)}`]"
+        :class="[
+          'card-pro opacity-0 animate-fade-in-up',
+          `stagger-${Math.min(i + 1, 10)}`,
+          p.featured ? 'sm:col-span-2 lg:col-span-3 border-portfolio-accent/40' : ''
+        ]"
       >
+        <p
+          v-if="p.badge"
+          class="inline-flex items-center mb-3 text-xs font-medium tracking-wide uppercase text-portfolio-accent bg-portfolio-accent/10 border border-portfolio-accent/30 rounded-full px-2.5 py-1"
+        >
+          {{ p.badge }}
+        </p>
         <h2 class="font-semibold text-portfolio-text mb-1">{{ p.title }}</h2>
         <p class="text-sm text-portfolio-muted mb-2">{{ p.type }}</p>
-        <p class="text-sm text-portfolio-muted line-clamp-3 mb-3">{{ p.description }}</p>
+        <p :class="['text-sm text-portfolio-muted mb-3', p.featured ? '' : 'line-clamp-3']">{{ p.description }}</p>
         <div class="flex flex-wrap gap-2 mb-3">
           <span
-            v-for="t in (p.technologies || []).slice(0, 4)"
+            v-for="t in (p.featured ? (p.technologies || []) : (p.technologies || []).slice(0, 4))"
             :key="t"
             class="text-xs px-2.5 py-1 rounded-lg bg-white/5 text-portfolio-muted border border-white/[0.04] hover:border-portfolio-accent/20 hover:text-portfolio-accent/90 transition-colors"
           >

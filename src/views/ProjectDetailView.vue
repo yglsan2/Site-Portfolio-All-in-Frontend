@@ -65,6 +65,12 @@ function goBack() {
     <template v-else-if="project">
       <article class="max-w-3xl">
         <header class="mb-10">
+          <p
+            v-if="project.badge"
+            class="inline-flex items-center mb-3 text-xs font-medium tracking-wide uppercase text-portfolio-accent bg-portfolio-accent/10 border border-portfolio-accent/30 rounded-full px-2.5 py-1"
+          >
+            {{ project.badge }}
+          </p>
           <h1 class="text-2xl sm:text-3xl font-bold text-portfolio-text mb-2">
             {{ project.title }}
           </h1>

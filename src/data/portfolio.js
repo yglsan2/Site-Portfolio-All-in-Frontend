@@ -8,7 +8,7 @@ export const profile = {
   id: 1,
   name: 'Benjamin Moine',
   title: "Développeur d'applications",
-  bio: "Développeur passionné par les applications et l'infra. Expérience en Java (Jakarta EE, Spring Boot, Maven), Python, JavaScript, modélisation de données et DevOps (Docker, Kubernetes, Ansible, Jenkins, CI/CD). Méthodes agiles (Scrum), tests unitaires et déploiement. Anglais C1.",
+  bio: "Stage chez Dokos : j'ai conçu Doki, un bot RAG branché sur l'ERP. L'assistant s'appuie sur le framework Frappe (DocTypes, hooks, API, permissions) pour interroger les documents métier et proposer des actions — devis, commande, facture — uniquement après confirmation.\n\nÀ côté de ce stage : Java (Jakarta EE, Spring Boot), Python, JavaScript, modélisation de données et DevOps (Docker, Kubernetes, Ansible, Jenkins, CI/CD). Anglais C1.",
   email: null,
   linkedinUrl: null,
   githubUrl: 'https://github.com/yglsan2'
@@ -18,7 +18,7 @@ export const projects = [
   { id: 1, title: "BarrelMCD (Python)", slug: "barrelmcd-python", description: "Outil de modélisation MCD en Python. Interface graphique (Tkinter), génération de schémas, export. Projet personnel complet et utilisable.", type: "SOFTWARE", technologies: ["Python", "Tkinter", "SQL"], sortOrder: 1, projectUrl: null, repoUrl: "https://github.com/yglsan2/BarrelMCD-python" },
   { id: 2, title: "Lumières d'Ukraine", slug: "lumieres-ukraine", description: "Plateforme culturelle : bibliothèque virtuelle et événements. Vue 3, i18n (FR, EN, UK, DE, PL), backend Spring Boot avec JWT.", type: "WEBSITE", technologies: ["Vue 3", "Pinia", "Vue I18n", "Spring Boot", "PostgreSQL"], sortOrder: 2, projectUrl: null, repoUrl: "https://github.com/yglsan2/Ukraine" },
   { id: 10, title: "Site Hypnotisation (Chloé Deroy)", slug: "site-hypnotisation", description: "Site web professionnel pour hypnothérapeute : réservation, paiement Stripe, React + Vite, backend Spring Boot (Java 21), JWT, PostgreSQL, RGPD.", type: "WEBSITE", technologies: ["React", "Vite", "Tailwind", "Spring Boot", "Java 21", "JWT", "Stripe", "PostgreSQL"], sortOrder: 3, projectUrl: null, repoUrl: "https://github.com/yglsan2/SiteHypnotisation" },
-  { id: 3, title: "DokiLight", slug: "dokilight", description: "Chatbot RAG (stage Dokos) : version light de Doki Expert. Recherche par mots-clés dans la doc, PostgreSQL/pgvector, Streamlit, scoring hybride sémantique + conceptuel.", type: "SOFTWARE", technologies: ["Python", "Streamlit", "PostgreSQL", "pgvector", "SentenceTransformer"], sortOrder: 4, projectUrl: null, repoUrl: "https://github.com/yglsan2/DokiLight" },
+  { id: 3, title: "Doki — bot RAG (stage Dokos)", slug: "dokilight", description: "Stage chez Dokos. Doki est l'assistant conversationnel du Desk : une application Frappe qui indexe les documents de l'ERP (clients, devis, commandes, factures, stock), répond avec citations, et respecte les droits de l'utilisateur. La recherche est hybride (embeddings + concepts). Les écritures — devis, commande, facture, tâche — passent par frappe.new_doc et ne sont exécutées qu'après confirmation.", type: "SOFTWARE", technologies: ["Frappe", "Python", "RAG", "DocTypes", "PostgreSQL", "pgvector"], sortOrder: 0, featured: true, badge: "Stage Dokos", projectUrl: null, repoUrl: "https://github.com/yglsan2/DokiLight" },
   { id: 4, title: "Noublipo (NopList)", slug: "noublipo", description: "Application liste de courses / shopping list.", type: "SOFTWARE", technologies: ["Flutter", "Dart"], sortOrder: 5, projectUrl: null, repoUrl: "https://github.com/yglsan2/Noublipo" },
   { id: 5, title: "ManyFaces", slug: "manyfaces", description: "Logiciel de création de personnages et PNJ pour jeux de rôle.", type: "SOFTWARE", technologies: ["Flutter", "Dart"], sortOrder: 6, projectUrl: null, repoUrl: "https://github.com/yglsan2/RPGproject-Flutter-3-me-application-sous-flutter-" },
   { id: 6, title: "MoodCast", slug: "moodcast", description: "Application Flutter (météo / ambiance).", type: "SOFTWARE", technologies: ["Flutter", "Dart"], sortOrder: 7, projectUrl: null, repoUrl: "https://github.com/yglsan2/MoodCast" },
@@ -32,8 +32,8 @@ export const skills = [
   { id: 2, name: "Spring Boot", category: "Backend", level: 88, sortOrder: 2, keywords: ["REST", "Security", "Data JPA", "Validation"] },
   { id: 3, name: "Python", category: "Backend", level: 85, sortOrder: 3, keywords: ["Streamlit", "pgvector", "Dokos"] },
   { id: 4, name: "Tomcat", category: "Backend", level: 75, sortOrder: 4, keywords: ["Serveur d'applications", "Java EE"] },
-  { id: 5, name: "Frappe / ERPNext", category: "Backend", level: 70, sortOrder: 5, keywords: ["Framework Python", "ERP", "Frappe"] },
-  { id: 6, name: "Chatbot RAG", category: "Backend", level: 78, sortOrder: 6, keywords: ["DokiLight", "Recherche sémantique", "pgvector", "Scoring hybride"] },
+  { id: 5, name: "Frappe / ERPNext", category: "Backend", level: 70, sortOrder: 5, keywords: ["Stage Dokos", "DocTypes", "hooks", "whitelist", "Permissions"] },
+  { id: 6, name: "Chatbot RAG", category: "Backend", level: 78, sortOrder: 6, keywords: ["Doki", "Stage Dokos", "Recherche hybride", "pgvector", "Citations"] },
   { id: 7, name: "Vue.js", category: "Frontend", level: 88, sortOrder: 1, keywords: ["Vue 3", "Composition API", "Pinia", "Vite", "I18n"] },
   { id: 8, name: "Tailwind CSS", category: "Frontend", level: 85, sortOrder: 2, keywords: ["Utility-first", "Responsive"] },
   { id: 9, name: "JavaScript", category: "Frontend", level: 86, sortOrder: 3, keywords: ["ES6+", "UserScript", "DOM", "Fetch"] },
@@ -226,7 +226,7 @@ export const snippets = [
     "language": "python",
     "description": "Script réel du dépôt : vérification pgvector, chargement du modèle sentence-transformers et requête de similarité.",
     "code": "import psycopg\nfrom psycopg.rows import dict_row\nfrom sentence_transformers import SentenceTransformer\nimport json\n\ndef test_rag():\n    conn = psycopg.connect(host='localhost', port=5432, dbname='doki_light', user='doki_user', password='doki_password')\n\n    with conn.cursor() as cursor:\n        cursor.execute(\"SELECT * FROM pg_extension WHERE extname = 'vector';\")\n        if not cursor.fetchone():\n            print(\"Extension pgvector non trouvée\")\n            return\n\n    model = SentenceTransformer('all-MiniLM-L6-v2')\n    test_text = \"Ceci est un test de recherche vectorielle\"\n    embedding = model.encode(test_text)\n\n    with conn.cursor(row_factory=dict_row) as cursor:\n        embedding_json = json.dumps(embedding.tolist())\n        cursor.execute(\"\"\"\n            SELECT e.chunk_text, d.filename,\n                   1 - (e.embedding <=> %s::vector) as similarity\n            FROM embeddings e\n            JOIN documents d ON e.document_id = d.id\n            ORDER BY e.embedding <=> %s::vector\n            LIMIT 3\n        \"\"\", (embedding_json, embedding_json))\n        results = cursor.fetchall()\n    conn.close()",
-    "sortOrder": 1
+    "sortOrder": 7
   },
   {
     "id": 16,
@@ -237,7 +237,73 @@ export const snippets = [
     "language": "python",
     "description": "Bootstrap de l'interface Doki Light : vérif des imports (streamlit, psycopg, sentence_transformers, ollama) puis lancement sur le port 8501.",
     "code": "#!/usr/bin/env python3\n\"\"\" Script de lancement pour Doki Light - Version Streamlit \"\"\"\n\nimport subprocess\nimport sys\n\ndef main():\n    try:\n        import streamlit\n        import psycopg\n        import sentence_transformers\n        import ollama\n        print(\"Toutes les dépendances sont installées\")\n    except ImportError as e:\n        print(f\"Dépendance manquante: {e}\")\n        return False\n\n    subprocess.run([\n        sys.executable, \"-m\", \"streamlit\", \"run\",\n        \"doki_light_streamlit.py\",\n        \"--server.port\", \"8501\",\n        \"--server.address\", \"localhost\"\n    ])\n    return True\n\nif __name__ == \"__main__\":\n    success = main()\n    sys.exit(0 if success else 1)",
+    "sortOrder": 8
+  },
+  {
+    "id": 2001,
+    "projectId": 3,
+    "section": "Framework Frappe",
+    "title": "hooks.py : événements de documents, planificateur et permissions",
+    "slug": "doki-frappe-hooks",
+    "language": "python",
+    "description": "Point d'accroche de l'application Frappe. Chaque insertion ou mise à jour d'un document ERP déclenche l'indexation du bot. Le planificateur surveille factures en retard et stock bas. Les conversations restent filtrées par utilisateur.",
+    "code": "doc_events = {\n    \"*\": {\n        \"after_insert\": \"doki_light.api.indexing.on_document_change\",\n        \"on_update\": \"doki_light.api.indexing.on_document_change\",\n        \"on_trash\": \"doki_light.api.indexing.on_document_trash\",\n    }\n}\n\nscheduler_events = {\n    \"hourly\": [\n        \"doki_light.insights.jobs.detect_overdue_invoices\",\n        \"doki_light.insights.jobs.detect_pending_deliveries\",\n    ],\n    \"daily\": [\n        \"doki_light.insights.jobs.detect_low_stock\",\n        \"doki_light.insights.jobs.detect_expiring_quotations\",\n    ],\n}\n\npermission_query_conditions = {\n    \"Doki Conversation\": \"doki_light.permissions.conversation_query\",\n}\n\nhas_permission = {\n    \"Doki Conversation\": \"doki_light.permissions.conversation_has_permission\",\n}",
+    "sortOrder": 1
+  },
+  {
+    "id": 2002,
+    "projectId": 3,
+    "section": "Framework Frappe",
+    "title": "API whitelist : envoyer un message et lister les conversations",
+    "slug": "doki-frappe-whitelist",
+    "language": "python",
+    "description": "Méthodes exposées au Desk avec @frappe.whitelist. frappe.session.user limite la liste au propriétaire. frappe.get_doc charge la conversation, puis frappe.throw refuse l'accès si l'utilisateur n'est ni le propriétaire ni System Manager.",
+    "code": "import frappe\nfrom frappe import _\n\n@frappe.whitelist()\ndef send_message(message: str, conversation: str | None = None, agent: str | None = None):\n    return handle_message(message=message, conversation=conversation, agent=agent)\n\n@frappe.whitelist()\ndef list_conversations(limit: int = 30):\n    user = frappe.session.user\n    return frappe.get_all(\n        \"Doki Conversation\",\n        filters={\"user\": user},\n        fields=[\"name\", \"title\", \"agent\", \"status\", \"modified\"],\n        order_by=\"modified desc\",\n        limit_page_length=int(limit or 30),\n    )\n\n@frappe.whitelist()\ndef get_conversation(name: str):\n    doc = frappe.get_doc(\"Doki Conversation\", name)\n    if doc.user != frappe.session.user and \"System Manager\" not in frappe.get_roles():\n        frappe.throw(_(\"Accès refusé\"), frappe.PermissionError)\n    return {\"name\": doc.name, \"title\": doc.title, \"messages\": doc.messages}",
     "sortOrder": 2
+  },
+  {
+    "id": 2003,
+    "projectId": 3,
+    "section": "Framework Frappe",
+    "title": "DocType Doki Settings : validate() et Single DocType",
+    "slug": "doki-frappe-settings",
+    "language": "python",
+    "description": "Contrôleur du Single DocType de réglage. validate() borne taille des chunks, top-k et seuil de confiance du RAG. get_settings() lit le document avec frappe.get_single, ou le crée avec frappe.new_doc s'il n'existe pas encore.",
+    "code": "import frappe\nfrom frappe.model.document import Document\n\nclass DokiSettings(Document):\n    def validate(self):\n        self.chunk_size = max(100, int(self.chunk_size or 400))\n        self.chunk_overlap = max(0, min(int(self.chunk_overlap or 50), self.chunk_size // 2))\n        self.top_k = max(1, min(int(self.top_k or 6), 20))\n        self.min_score = max(0.0, min(float(self.min_score or 0.28), 1.0))\n        self.confidence_threshold = max(0.1, min(float(self.confidence_threshold or 0.42), 0.9))\n\ndef get_settings():\n    if not frappe.db.exists(\"DocType\", \"Doki Settings\"):\n        return None\n    try:\n        return frappe.get_single(\"Doki Settings\")\n    except frappe.DoesNotExistError:\n        doc = frappe.new_doc(\"Doki Settings\")\n        doc.insert(ignore_permissions=True)\n        frappe.db.commit()\n        return doc",
+    "sortOrder": 3
+  },
+  {
+    "id": 2004,
+    "projectId": 3,
+    "section": "Framework Frappe",
+    "title": "Indexation RAG : hook, file d'attente et insertion des chunks",
+    "slug": "doki-frappe-indexing",
+    "language": "python",
+    "description": "Quand un devis ou une facture change, le hook enqueue l'indexation après le commit. index_document relit le document avec frappe.get_doc, le découpe, puis enregistre chaque chunk comme DocType Doki Document Chunk.",
+    "code": "def on_document_change(doc, method=None):\n    if not _should_index(doc.doctype):\n        return\n    frappe.enqueue(\n        \"doki_light.api.indexing.index_document\",\n        queue=\"short\",\n        doctype=doc.doctype,\n        name=doc.name,\n        enqueue_after_commit=True,\n        deduplicate=True,\n        job_id=f\"doki_index::{doc.doctype}::{doc.name}\",\n    )\n\ndef index_document(doctype: str, name: str):\n    if not frappe.db.exists(doctype, name):\n        return\n    doc = frappe.get_doc(doctype, name)\n    text = document_to_text(doctype, doc.as_dict())\n    chunks = chunk_text(text, chunk_size=400, overlap=50)\n    vectors = embed_texts(chunks)\n    for idx, chunk in enumerate(chunks):\n        row = frappe.get_doc({\n            \"doctype\": \"Doki Document Chunk\",\n            \"ref_doctype\": doctype,\n            \"ref_name\": name,\n            \"chunk_index\": idx,\n            \"chunk_text\": chunk,\n            \"embedding_json\": dump_embedding(vectors[idx]),\n            \"title\": doc.name,\n        })\n        row.insert(ignore_permissions=True)\n    frappe.db.commit()",
+    "sortOrder": 4
+  },
+  {
+    "id": 2005,
+    "projectId": 3,
+    "section": "Framework Frappe",
+    "title": "Recherche du bot : frappe.get_all filtré par les droits",
+    "slug": "doki-frappe-retrieval",
+    "language": "python",
+    "description": "Le RAG ne renvoie que les chunks dont l'utilisateur peut lire le document source. frappe.has_permission est appelé sur le DocType, puis sur le document (client, facture, article) avant le calcul de similarité.",
+    "code": "user = user or frappe.session.user\nrows = frappe.get_all(\n    \"Doki Document Chunk\",\n    fields=[\"name\", \"ref_doctype\", \"ref_name\", \"chunk_text\", \"embedding_json\", \"title\", \"concepts\"],\n    order_by=\"modified desc\",\n    limit_page_length=int(max_candidates or 1200),\n)\n\nvectors, valid_rows = [], []\nfor row in rows:\n    if not frappe.has_permission(row.ref_doctype, \"read\", user=user):\n        continue\n    if not frappe.db.exists(row.ref_doctype, row.ref_name):\n        continue\n    if not frappe.has_permission(row.ref_doctype, \"read\", doc=row.ref_name, user=user):\n        continue\n    arr = load_embedding_array(row.embedding_json)\n    if arr is None:\n        continue\n    vectors.append(arr)\n    valid_rows.append(row)\n\nmatrix = np.vstack(vectors)\nsemantic_scores = matrix_cosine(query_embedding, matrix)",
+    "sortOrder": 5
+  },
+  {
+    "id": 2006,
+    "projectId": 3,
+    "section": "Framework Frappe",
+    "title": "Action métier : créer une commande avec frappe.new_doc",
+    "slug": "doki-frappe-sales-order",
+    "language": "python",
+    "description": "Après confirmation de l'utilisateur, le bot crée un Sales Order. frappe.has_permission bloque la création si le rôle ne le permet pas. frappe.new_doc, doc.append(\"items\") puis doc.insert() enregistrent le brouillon dans l'ERP.",
+    "code": "def execute(payload: dict) -> dict:\n    if not frappe.db.exists(\"DocType\", \"Sales Order\"):\n        frappe.throw(_(\"Le DocType Sales Order n'est pas disponible\"))\n    if not frappe.has_permission(\"Sales Order\", \"create\"):\n        frappe.throw(_(\"Permission insuffisante\"), frappe.PermissionError)\n\n    customer = payload.get(\"customer\")\n    if not customer:\n        frappe.throw(_(\"Client manquant\"))\n\n    doc = frappe.new_doc(\"Sales Order\")\n    doc.customer = customer\n    if payload.get(\"item_code\"):\n        doc.append(\"items\", {\n            \"item_code\": payload[\"item_code\"],\n            \"qty\": float(payload.get(\"qty\") or 1),\n        })\n    doc.insert()\n    return {\n        \"doctype\": \"Sales Order\",\n        \"name\": doc.name,\n        \"route\": f\"/app/sales-order/{doc.name}\",\n        \"message\": _(\"Commande {0} créée en brouillon\").format(doc.name),\n    }",
+    "sortOrder": 6
   },
   {
     "id": 17,

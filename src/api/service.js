@@ -20,7 +20,8 @@ function getProfile() {
  * @returns {Promise<object[]>}
  */
 function getProjects() {
-  return Promise.resolve(projects)
+  const list = [...projects].sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
+  return Promise.resolve(list)
 }
 
 /**
@@ -44,7 +45,9 @@ function getProjectBySlug(slug) {
  * @returns {Promise<object[]>}
  */
 function getSnippetsByProjectId(projectId) {
-  const list = snippets.filter((s) => s.projectId === projectId)
+  const list = snippets
+    .filter((s) => s.projectId === projectId)
+    .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
   return Promise.resolve(list)
 }
 

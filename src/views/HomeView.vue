@@ -7,6 +7,7 @@ import { ref, onMounted } from 'vue'
 import { api } from '@/api/service'
 
 const profile = ref(null)
+const featured = ref(null)
 const loading = ref(true)
 const error = ref(null)
 
@@ -15,6 +16,8 @@ async function load() {
   error.value = null
   try {
     profile.value = await api.getProfile()
+    const projects = await api.getProjects()
+    featured.value = projects.find((p) => p.featured) || null
   } catch (e) {
     const msg = e.message || 'Impossible de charger le profil.'
     error.value = msg
@@ -65,9 +68,20 @@ onMounted(load)
         <p class="home-item text-xl sm:text-2xl text-portfolio-accent font-medium mb-8" style="animation-delay: 0.35s">
           {{ profile.title }}
         </p>
-        <div class="home-item text-portfolio-muted leading-relaxed whitespace-pre-line max-w-2xl mb-12 text-balance" style="animation-delay: 0.5s">
+        <div class="home-item text-portfolio-muted leading-relaxed whitespace-pre-line max-w-2xl mb-8 text-balance" style="animation-delay: 0.5s">
           {{ profile.bio }}
         </div>
+        <router-link
+          v-if="featured"
+          :to="{ name: 'ProjectDetail', params: { slug: featured.slug } }"
+          class="home-item mb-8 block max-w-2xl rounded-2xl border border-portfolio-accent/35 bg-portfolio-accent/10 px-5 py-4 hover:bg-portfolio-accent/15 hover:border-portfolio-accent/50 transition-colors"
+          style="animation-delay: 0.58s"
+        >
+          <p class="text-xs font-medium tracking-wide uppercase text-portfolio-accent mb-1">{{ featured.badge || 'Projet mis en avant' }}</p>
+          <p class="text-lg font-semibold text-portfolio-text">{{ featured.title }}</p>
+          <p class="text-sm text-portfolio-muted mt-1 line-clamp-2">Bot RAG intégré à l'ERP Dokos, avec le framework Frappe.</p>
+          <p class="text-sm text-portfolio-accent mt-3">Voir le projet et les extraits Frappe →</p>
+        </router-link>
         <div v-if="profile.githubUrl" class="home-item flex flex-wrap gap-4" style="animation-delay: 0.65s">
           <a
             :href="profile.githubUrl"
