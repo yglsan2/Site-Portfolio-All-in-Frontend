@@ -49,7 +49,7 @@ watch(selectedProject, (p) => {
   <div>
     <h1 class="page-title text-2xl sm:text-3xl font-bold text-portfolio-text mb-2">{{ t('codes.title') }}</h1>
     <p class="text-portfolio-muted text-sm sm:text-base mb-8">
-      Extraits de code issus des projets, classés par thème (classes métier, méthodes, architecture).
+      {{ t('codes.lead') }}
     </p>
     <div v-if="loading" class="text-portfolio-muted flex items-center gap-2">
       <span class="inline-block w-2 h-2 rounded-full bg-portfolio-accent animate-pulse" />

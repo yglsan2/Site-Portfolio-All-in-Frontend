@@ -32,7 +32,7 @@ export const messages = {
     'detail.snippets': 'Extraits de code',
     'detail.visual': 'Carte d\'adhésion réalisée pour le projet',
     'skills.title': 'Compétences',
-    'skills.lead': 'Chaque ligne importante renvoie vers un projet où elle est utilisée.',
+    'skills.lead': 'Quand une compétence a un projet derrière, la ligne y renvoie.',
     'skills.proof': 'Vu dans',
     'contact.title': 'Contact',
     'contact.lead': 'Pour un échange sur un poste ou un projet.',
@@ -52,6 +52,7 @@ export const messages = {
     'mentions.data': 'Données',
     'mentions.dataBody': 'Ce site ne crée pas de compte et n\'a pas de formulaire. Écrire à l\'adresse ci-dessus est volontaire. Aucun traceur publicitaire n\'est déposé.',
     'codes.title': 'Codes',
+    'codes.lead': 'Extraits pris dans les dépôts.',
     'notfound': 'Page introuvable',
   },
   en: {
@@ -86,7 +87,7 @@ export const messages = {
     'detail.snippets': 'Code excerpts',
     'detail.visual': 'Membership card designed for the project',
     'skills.title': 'Skills',
-    'skills.lead': 'The important lines link to a project where the skill is used.',
+    'skills.lead': 'When a skill has a project behind it, the line links to it.',
     'skills.proof': 'Seen in',
     'contact.title': 'Contact',
     'contact.lead': 'For a role or a project.',
@@ -106,6 +107,7 @@ export const messages = {
     'mentions.data': 'Data',
     'mentions.dataBody': 'This site has no accounts and no form. Emailing the address above is voluntary. No advertising tracker is set.',
     'codes.title': 'Code',
+    'codes.lead': 'Excerpts taken from the repositories.',
     'notfound': 'Page not found',
   },
 }

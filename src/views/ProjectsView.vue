@@ -63,7 +63,7 @@ function openProject(project) {
               v-if="p.image"
               :src="p.image"
               :alt="pick(p.imageAlt) || t('detail.visual')"
-              class="mb-4 w-full max-h-48 object-cover rounded-xl border border-white/[0.06]"
+              class="mb-4 w-full max-h-[28rem] object-cover object-top rounded-xl border border-white/[0.06]"
             >
             <p
               v-if="p.badge"
