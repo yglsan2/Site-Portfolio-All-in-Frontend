@@ -70,7 +70,13 @@ function goBack() {
           <img
             v-if="project.image"
             :src="project.image"
-            :alt="t('detail.visual')"
+            :alt="pick(project.imageAlt) || t('detail.visual')"
+            class="mb-6 w-full rounded-2xl border border-white/[0.06]"
+          >
+          <img
+            v-if="project.imageSecondary"
+            :src="project.imageSecondary"
+            :alt="pick(project.imageSecondaryAlt) || t('detail.visual')"
             class="mb-6 w-full rounded-2xl border border-white/[0.06]"
           >
           <p
@@ -82,7 +88,7 @@ function goBack() {
           <h1 class="text-2xl sm:text-3xl font-bold text-portfolio-text mb-2">
             {{ pick(project.title) }}
           </h1>
-          <p class="text-portfolio-muted mb-6">{{ project.type }}</p>
+          <p class="text-portfolio-muted mb-6">{{ t('type.' + project.type) }}</p>
           <dl v-if="project.caseStudy" class="space-y-5 mb-6">
             <div v-for="key in ['problem', 'role', 'decision', 'result']" :key="key">
               <dt class="text-xs font-medium uppercase tracking-wide text-portfolio-accent mb-1">{{ t('case.' + key) }}</dt>

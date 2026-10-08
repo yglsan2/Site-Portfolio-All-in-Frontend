@@ -3,24 +3,25 @@
  * Page d'accueil : affiche le profil (nom, titre, bio, lien GitHub) chargé via l'API.
  * Un seul try (appel API), un catch (message utilisateur + log), un finally (loading = false).
  */
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { api } from '@/api/service'
 import { useLocale } from '@/composables/useLocale'
 
 const { t, pick } = useLocale()
 
 const profile = ref(null)
-const featured = ref(null)
+const projects = ref([])
 const loading = ref(true)
 const error = ref(null)
+
+const cases = computed(() => projects.value.filter((p) => p.caseStudy))
 
 async function load() {
   loading.value = true
   error.value = null
   try {
     profile.value = await api.getProfile()
-    const projects = await api.getProjects()
-    featured.value = projects.find((p) => p.featured) || null
+    projects.value = await api.getProjects()
   } catch (e) {
     const msg = e.message || 'Impossible de charger le profil.'
     error.value = msg
@@ -77,17 +78,18 @@ onMounted(load)
         <div class="home-item text-portfolio-muted leading-relaxed whitespace-pre-line max-w-2xl mb-8 text-balance" style="animation-delay: 0.5s">
           {{ pick(profile.bio) }}
         </div>
-        <router-link
-          v-if="featured"
-          :to="{ name: 'ProjectDetail', params: { slug: featured.slug } }"
-          class="home-item mb-8 block max-w-2xl rounded-2xl border border-portfolio-accent/35 bg-portfolio-accent/10 px-5 py-4 hover:bg-portfolio-accent/15 hover:border-portfolio-accent/50 transition-colors"
-          style="animation-delay: 0.58s"
-        >
-          <p class="text-xs font-medium tracking-wide uppercase text-portfolio-accent mb-1">{{ featured.badge || 'Projet mis en avant' }}</p>
-          <p class="text-lg font-semibold text-portfolio-text">{{ pick(featured.title) }}</p>
-          <p class="text-sm text-portfolio-muted mt-1 line-clamp-3">{{ pick(featured.caseStudy?.result || featured.description) }}</p>
-          <p class="text-sm text-portfolio-accent mt-3">{{ t('home.featuredCta') }} →</p>
-        </router-link>
+        <ul v-if="cases.length" class="home-item mb-8 grid gap-3 max-w-2xl" style="animation-delay: 0.58s">
+          <li v-for="p in cases" :key="p.id">
+            <router-link
+              :to="{ name: 'ProjectDetail', params: { slug: p.slug } }"
+              class="block rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4 hover:border-portfolio-accent/40 transition-colors"
+            >
+              <p class="text-lg font-semibold text-portfolio-text">{{ pick(p.title) }}</p>
+              <p class="text-sm text-portfolio-muted mt-1">{{ pick(p.teaser || p.description) }}</p>
+              <p class="text-sm text-portfolio-accent mt-2">{{ t('home.featuredCta') }} →</p>
+            </router-link>
+          </li>
+        </ul>
         <div class="home-item flex flex-wrap gap-3" style="animation-delay: 0.65s">
           <a
             v-if="profile.email"

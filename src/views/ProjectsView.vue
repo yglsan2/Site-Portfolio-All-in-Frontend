@@ -62,7 +62,7 @@ function openProject(project) {
             <img
               v-if="p.image"
               :src="p.image"
-              :alt="t('detail.visual')"
+              :alt="pick(p.imageAlt) || t('detail.visual')"
               class="mb-4 w-full max-h-48 object-cover rounded-xl border border-white/[0.06]"
             >
             <p
@@ -72,7 +72,7 @@ function openProject(project) {
               {{ p.badge }}
             </p>
             <h3 class="font-semibold text-portfolio-text text-lg mb-2">{{ pick(p.title) }}</h3>
-            <p class="text-sm text-portfolio-muted mb-3">{{ pick(p.caseStudy.result) }}</p>
+            <p class="text-sm text-portfolio-muted mb-3">{{ pick(p.teaser || p.description) }}</p>
             <div class="flex flex-wrap gap-2 mb-3">
               <span
                 v-for="tech in p.technologies"
@@ -114,7 +114,7 @@ function openProject(project) {
             @click="openProject(p)"
           >
             <h3 class="font-semibold text-portfolio-text mb-1">{{ pick(p.title) }}</h3>
-            <p class="text-sm text-portfolio-muted mb-2">{{ p.type }}</p>
+            <p class="text-sm text-portfolio-muted mb-2">{{ t('type.' + p.type) }}</p>
             <p class="text-sm text-portfolio-muted mb-3 line-clamp-3">{{ pick(p.description) }}</p>
             <div class="flex flex-wrap gap-2 mb-3">
               <span
