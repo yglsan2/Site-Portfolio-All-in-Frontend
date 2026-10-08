@@ -1,5 +1,8 @@
 {
   "rewrites": [
+    { "source": "/lumieres", "destination": "/lumieres/index.html" },
+    { "source": "/lumieres/", "destination": "/lumieres/index.html" },
+    { "source": "/lumieres/:match*", "destination": "/lumieres/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

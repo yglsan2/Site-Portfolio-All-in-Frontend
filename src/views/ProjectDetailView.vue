@@ -65,6 +65,13 @@ function goBack() {
       <button type="button" class="touch-target-inline text-sm text-portfolio-accent hover:underline focus-visible-ring rounded px-3 py-2" @click="load">Réessayer</button>
     </div>
     <template v-else-if="project">
+      <iframe
+        v-if="project.previewPath"
+        :src="project.previewPath"
+        :title="pick(project.previewTitle) || pick(project.title)"
+        class="relative left-1/2 mb-8 h-[36rem] w-[min(72rem,calc(100vw-2rem))] max-w-6xl -translate-x-1/2 rounded-2xl border border-white/[0.06]"
+        loading="lazy"
+      />
       <article class="max-w-3xl">
         <header class="mb-10">
           <img

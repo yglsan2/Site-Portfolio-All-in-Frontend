@@ -129,13 +129,13 @@ export const projects = [
       },
     },
     teaser: {
-      fr: 'Bibliothèque, événements et adhésion, en cinq langues.',
-      en: 'Library, events and membership, in five languages.',
+      fr: 'La page d\'accueil animée est sur la fiche : livres flottants, navigation, cinq langues.',
+      en: 'The animated homepage is on the project page: floating books, navigation, five languages.',
     },
-    image: '/images/lumieres-ukraine-accueil.png',
-    imageAlt: {
-      fr: 'Page d\'accueil du frontend Vue, lancée depuis le dépôt.',
-      en: 'Vue frontend homepage, run from the repository.',
+    previewPath: '/lumieres/?lang=fr',
+    previewTitle: {
+      fr: 'Page d\'accueil de Lumières d\'Ukraine',
+      en: 'Lumières d\'Ukraine homepage',
     },
     type: 'WEBSITE',
     technologies: ['Vue 3', 'Vue I18n', 'Spring Boot', 'PostgreSQL'],
