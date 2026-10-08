@@ -38,7 +38,7 @@ function openProject(project) {
 </script>
 
 <template>
-  <div>
+  <div class="container-pro">
     <h1 class="page-title text-2xl sm:text-3xl font-bold text-portfolio-text mb-2">{{ t('projects.title') }}</h1>
     <p class="text-portfolio-muted text-sm sm:text-base mb-10">{{ t('projects.lead') }}</p>
     <div v-if="loading" class="text-portfolio-muted flex items-center gap-2">

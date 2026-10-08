@@ -9,7 +9,7 @@ const { t } = useLocale()
   <div class="min-h-screen flex flex-col">
     <a href="#main" class="skip-link">Aller au contenu principal</a>
     <AppNavbar />
-    <main id="main" class="flex-1 container-pro py-8 sm:py-12" tabindex="-1" v-tap-safe>
+    <main id="main" class="flex-1 w-full min-w-0 py-8 sm:py-12" tabindex="-1" v-tap-safe>
       <router-view v-slot="{ Component }">
         <transition name="page" mode="out-in">
           <component :is="Component" />

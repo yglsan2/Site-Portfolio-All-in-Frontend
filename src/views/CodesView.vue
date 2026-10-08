@@ -46,7 +46,7 @@ watch(selectedProject, (p) => {
 </script>
 
 <template>
-  <div>
+  <div class="container-pro">
     <h1 class="page-title text-2xl sm:text-3xl font-bold text-portfolio-text mb-2">{{ t('codes.title') }}</h1>
     <p class="text-portfolio-muted text-sm sm:text-base mb-8">
       {{ t('codes.lead') }}

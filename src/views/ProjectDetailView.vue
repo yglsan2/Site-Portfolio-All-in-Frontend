@@ -57,24 +57,26 @@ function goBack() {
 
 <template>
   <div>
-    <button
-      type="button"
-      class="touch-target-inline mb-6 text-sm text-portfolio-muted hover:text-portfolio-accent transition-colors flex items-center gap-1.5 group py-2 -my-2 active:opacity-80"
-      @click="goBack"
-    >
-      <span class="inline-block transition-transform group-hover:-translate-x-0.5">←</span>
-      {{ t('projects.back') }}
-    </button>
+    <div class="container-pro">
+      <button
+        type="button"
+        class="touch-target-inline mb-6 text-sm text-portfolio-muted hover:text-portfolio-accent transition-colors flex items-center gap-1.5 group py-2 -my-2 active:opacity-80"
+        @click="goBack"
+      >
+        <span class="inline-block transition-transform group-hover:-translate-x-0.5">←</span>
+        {{ t('projects.back') }}
+      </button>
 
-    <div v-if="loading" class="text-portfolio-muted flex items-center gap-2">
-      <span class="inline-block w-2 h-2 rounded-full bg-portfolio-accent animate-pulse" />
-      Chargement…
+      <div v-if="loading" class="text-portfolio-muted flex items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-portfolio-accent animate-pulse" />
+        Chargement…
+      </div>
+      <div v-else-if="error" class="space-y-3">
+        <p class="text-red-400">{{ error }}</p>
+        <button type="button" class="touch-target-inline text-sm text-portfolio-accent hover:underline focus-visible-ring rounded px-3 py-2" @click="load">Réessayer</button>
+      </div>
     </div>
-    <div v-else-if="error" class="space-y-3">
-      <p class="text-red-400">{{ error }}</p>
-      <button type="button" class="touch-target-inline text-sm text-portfolio-accent hover:underline focus-visible-ring rounded px-3 py-2" @click="load">Réessayer</button>
-    </div>
-    <template v-else-if="project">
+    <template v-if="project && !loading && !error">
       <div
         v-if="project.projectUrl"
         class="site-preview mb-8"
@@ -96,6 +98,7 @@ function goBack() {
             <span aria-hidden="true">→</span>
           </a>
       </div>
+      <div class="container-pro">
       <article class="max-w-3xl">
         <header class="mb-10">
           <img
@@ -175,6 +178,7 @@ function goBack() {
           </ul>
         </section>
       </article>
+      </div>
     </template>
   </div>
 </template>
@@ -183,9 +187,7 @@ function goBack() {
 .site-preview {
   position: relative;
   container-type: inline-size;
-  width: 100vw;
-  max-width: 100vw;
-  margin-left: calc(50% - 50vw);
+  width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
 }

@@ -24,7 +24,8 @@ onMounted(load)
 </script>
 
 <template>
-  <div class="max-w-2xl">
+  <div class="container-pro">
+    <div class="max-w-2xl">
     <h1 class="page-title text-2xl sm:text-3xl font-bold text-portfolio-text mb-2">{{ t('contact.title') }}</h1>
     <p class="text-portfolio-muted text-sm sm:text-base mb-8">{{ t('contact.lead') }}</p>
     <div v-if="loading" class="text-portfolio-muted">Chargement…</div>
@@ -57,5 +58,6 @@ onMounted(load)
         </li>
       </ul>
     </template>
+    </div>
   </div>
 </template>

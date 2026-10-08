@@ -35,7 +35,7 @@ onMounted(load)
 </script>
 
 <template>
-  <div class="home-hero min-h-[70vh] flex flex-col justify-center relative overflow-hidden">
+  <div class="home-hero container-pro min-h-[70vh] flex flex-col justify-center relative overflow-hidden">
     <!-- Fond : gradient doux + motif discret -->
     <div class="absolute inset-0 bg-gradient-to-br from-portfolio-bg via-portfolio-bg to-portfolio-accent/5 pointer-events-none" />
     <div class="absolute inset-0 opacity-[0.04] pointer-events-none" style="background-image: radial-gradient(circle at 1px 1px, var(--text) 1px, transparent 0); background-size: 36px 36px;" />

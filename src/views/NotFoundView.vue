@@ -5,7 +5,7 @@ const router = useRouter()
 </script>
 
 <template>
-  <div class="max-w-md mx-auto py-16 text-center">
+  <div class="container-pro max-w-md mx-auto py-16 text-center">
     <p class="text-6xl font-bold text-portfolio-muted/40 mb-4" aria-hidden="true">404</p>
     <h1 class="text-xl font-semibold text-portfolio-text mb-2">Page introuvable</h1>
     <p class="text-portfolio-muted text-sm mb-8">
