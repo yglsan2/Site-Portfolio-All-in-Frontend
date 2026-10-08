@@ -3,6 +3,9 @@
     { "source": "/lumieres", "destination": "/lumieres/index.html" },
     { "source": "/lumieres/", "destination": "/lumieres/index.html" },
     { "source": "/lumieres/:match*", "destination": "/lumieres/index.html" },
+    { "source": "/hypnose", "destination": "/hypnose/index.html" },
+    { "source": "/hypnose/", "destination": "/hypnose/index.html" },
+    { "source": "/hypnose/:match*", "destination": "/hypnose/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

@@ -95,11 +95,11 @@ export const projects = [
     type: 'WEBSITE',
     technologies: ['React', 'Vite', 'Tailwind', 'Spring Boot', 'Java 21', 'JWT', 'Stripe', 'PostgreSQL'],
     teaser: {
-      fr: 'Connexion, prise de rendez-vous et paiement.',
-      en: 'Sign-in, appointment booking and payment.',
+      fr: 'Miniature animée de l\'accueil, et le lien ouvre la vraie page.',
+      en: 'Animated homepage thumbnail, and the link opens the real page.',
     },
     sortOrder: 1,
-    projectUrl: null,
+    projectUrl: '/hypnose/',
     repoUrl: 'https://github.com/yglsan2/SiteHypnotisation',
   },
   {

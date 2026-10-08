@@ -6,19 +6,22 @@ import vue from '@vitejs/plugin-vue'
 
 const rootDir = fileURLToPath(new URL('.', import.meta.url))
 
-function lumieresPreview() {
+const embeddedSites = ['lumieres', 'hypnose']
+
+function embeddedSitePreview() {
   return {
-    name: 'lumieres-preview',
+    name: 'embedded-site-preview',
     configureServer(server) {
       server.middlewares.use((req, _res, next) => {
         const raw = req.url || ''
         const pathname = raw.split('?')[0]
-        if (!pathname.startsWith('/lumieres')) return next()
+        const site = embeddedSites.find((name) => pathname === `/${name}` || pathname.startsWith(`/${name}/`))
+        if (!site) return next()
         const query = raw.includes('?') ? raw.slice(raw.indexOf('?')) : ''
-        const rel = pathname.replace(/^\/lumieres\/?/, '')
-        const file = path.join(rootDir, 'public', 'lumieres', rel)
+        const rel = pathname.replace(new RegExp(`^/${site}/?`), '')
+        const file = path.join(rootDir, 'public', site, rel)
         if (rel && fs.existsSync(file) && fs.statSync(file).isFile()) return next()
-        req.url = `/lumieres/index.html${query}`
+        req.url = `/${site}/index.html${query}`
         next()
       })
     },
@@ -26,7 +29,7 @@ function lumieresPreview() {
 }
 
 export default defineConfig({
-  plugins: [lumieresPreview(), vue()],
+  plugins: [embeddedSitePreview(), vue()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

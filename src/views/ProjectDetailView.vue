@@ -75,8 +75,11 @@ function goBack() {
       <button type="button" class="touch-target-inline text-sm text-portfolio-accent hover:underline focus-visible-ring rounded px-3 py-2" @click="load">Réessayer</button>
     </div>
     <template v-else-if="project">
-      <article class="max-w-3xl">
-        <div v-if="project.projectUrl" class="site-preview mb-8" :class="{ 'is-zooming': zooming }">
+      <div
+        v-if="project.projectUrl"
+        class="site-preview relative left-1/2 mb-8 w-[min(72rem,calc(100vw-2rem))] -translate-x-1/2"
+        :class="{ 'is-zooming': zooming }"
+      >
           <iframe
             :src="project.projectUrl"
             class="site-preview-frame"
@@ -92,7 +95,8 @@ function goBack() {
             {{ t('detail.site') }}
             <span aria-hidden="true">→</span>
           </a>
-        </div>
+      </div>
+      <article class="max-w-3xl">
         <header class="mb-10">
           <img
             v-if="project.image"
