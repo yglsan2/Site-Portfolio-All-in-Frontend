@@ -77,7 +77,7 @@ function goBack() {
     <template v-else-if="project">
       <div
         v-if="project.projectUrl"
-        class="site-preview relative left-1/2 mb-8 w-[min(72rem,calc(100vw-2rem))] -translate-x-1/2"
+        class="site-preview mb-8"
         :class="{ 'is-zooming': zooming }"
       >
           <iframe
@@ -183,10 +183,11 @@ function goBack() {
 .site-preview {
   position: relative;
   container-type: inline-size;
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .site-preview-frame {

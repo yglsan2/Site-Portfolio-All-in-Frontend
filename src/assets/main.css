@@ -98,12 +98,11 @@ a, button {
 /* Zone de scroll principale : pan-y pour glissement vertical clair */
 main {
   touch-action: pan-y;
-  overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
 }
 
 /* Éviter le scroll horizontal */
-body { overflow-x: hidden; }
+html, body { overflow-x: hidden; }
 
 /* Blocs de code : scroll horizontal fluide + tolérance */
 .code-block-content {
