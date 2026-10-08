@@ -15,6 +15,7 @@ const loading = ref(true)
 const error = ref(null)
 
 const cases = computed(() => projects.value.filter((p) => p.caseStudy))
+const others = computed(() => projects.value.filter((p) => !p.caseStudy))
 
 async function load() {
   loading.value = true
@@ -35,14 +36,14 @@ onMounted(load)
 </script>
 
 <template>
-  <div class="home-hero container-pro min-h-[70vh] flex flex-col justify-center relative overflow-hidden">
-    <!-- Fond : gradient doux + motif discret -->
-    <div class="absolute inset-0 bg-gradient-to-br from-portfolio-bg via-portfolio-bg to-portfolio-accent/5 pointer-events-none" />
-    <div class="absolute inset-0 opacity-[0.04] pointer-events-none" style="background-image: radial-gradient(circle at 1px 1px, var(--text) 1px, transparent 0); background-size: 36px 36px;" />
-    <!-- Orbes flottants -->
-    <div class="absolute top-1/4 -right-20 w-72 h-72 rounded-full bg-portfolio-accent/12 blur-3xl pointer-events-none animate-float" />
-    <div class="absolute bottom-1/4 -left-20 w-96 h-96 rounded-full bg-portfolio-accent/6 blur-3xl pointer-events-none animate-float" style="animation-delay: -4s;" />
-    <div class="absolute top-1/2 left-1/2 w-64 h-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-portfolio-accent/5 blur-3xl pointer-events-none animate-glow-pulse" />
+  <div class="home-hero container-pro min-h-[70vh] flex flex-col relative">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+      <div class="absolute inset-0 bg-gradient-to-br from-portfolio-bg via-portfolio-bg to-portfolio-accent/5" />
+      <div class="absolute inset-0 opacity-[0.04]" style="background-image: radial-gradient(circle at 1px 1px, var(--text) 1px, transparent 0); background-size: 36px 36px;" />
+      <div class="absolute top-1/4 -right-20 w-72 h-72 rounded-full bg-portfolio-accent/12 blur-3xl animate-float" />
+      <div class="absolute bottom-1/4 -left-20 w-96 h-96 rounded-full bg-portfolio-accent/6 blur-3xl animate-float" style="animation-delay: -4s;" />
+      <div class="absolute top-1/2 left-1/2 w-64 h-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-portfolio-accent/5 blur-3xl animate-glow-pulse" />
+    </div>
 
     <router-link
       to="/projets"
@@ -90,6 +91,23 @@ onMounted(load)
             </router-link>
           </li>
         </ul>
+        <section v-if="others.length" class="home-item mb-8 max-w-2xl" style="animation-delay: 0.62s">
+          <h2 class="text-sm font-medium tracking-wide text-portfolio-muted uppercase mb-3">{{ t('projects.others') }}</h2>
+          <ul class="grid gap-2">
+            <li v-for="p in others" :key="p.id">
+              <router-link
+                :to="{ name: 'ProjectDetail', params: { slug: p.slug } }"
+                class="flex items-baseline justify-between gap-4 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 hover:border-portfolio-accent/40 transition-colors"
+              >
+                <span>
+                  <span class="font-medium text-portfolio-text">{{ pick(p.title) }}</span>
+                  <span class="block text-sm text-portfolio-muted mt-0.5">{{ pick(p.description) }}</span>
+                </span>
+                <span class="shrink-0 text-sm text-portfolio-accent">{{ t('home.featuredCta') }} →</span>
+              </router-link>
+            </li>
+          </ul>
+        </section>
         <div class="home-item flex flex-wrap gap-3" style="animation-delay: 0.65s">
           <a
             v-if="profile.email"
