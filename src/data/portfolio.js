@@ -95,13 +95,8 @@ export const projects = [
     type: 'WEBSITE',
     technologies: ['React', 'Vite', 'Tailwind', 'Spring Boot', 'Java 21', 'JWT', 'Stripe', 'PostgreSQL'],
     teaser: {
-      fr: 'Page d\'accueil, connexion et prise de rendez-vous.',
-      en: 'Home page, sign-in and appointment booking.',
-    },
-    image: '/images/hypnose-apercu.png',
-    imageAlt: {
-      fr: 'Aperçu de la page d\'accueil, fichier preview.html du dépôt.',
-      en: 'Home page preview, the preview.html file from the repository.',
+      fr: 'Connexion, prise de rendez-vous et paiement.',
+      en: 'Sign-in, appointment booking and payment.',
     },
     sortOrder: 1,
     projectUrl: null,
@@ -134,8 +129,8 @@ export const projects = [
       },
     },
     teaser: {
-      fr: 'Page d\'accueil du frontend Vue : navigation, titre, et boutons Explorer et Rejoindre.',
-      en: 'Vue frontend homepage: navigation, title, and the Explore and Join buttons.',
+      fr: 'Bibliothèque, événements et adhésion, en cinq langues.',
+      en: 'Library, events and membership, in five languages.',
     },
     image: '/images/lumieres-ukraine-accueil.png',
     imageAlt: {

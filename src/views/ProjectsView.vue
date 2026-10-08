@@ -59,12 +59,6 @@ function openProject(project) {
             class="card-pro cursor-pointer"
             @click="openProject(p)"
           >
-            <img
-              v-if="p.image"
-              :src="p.image"
-              :alt="pick(p.imageAlt) || t('detail.visual')"
-              class="mb-4 w-full max-h-[28rem] object-cover object-top rounded-xl border border-white/[0.06]"
-            >
             <p
               v-if="p.badge"
               class="inline-flex items-center mb-3 text-xs font-medium tracking-wide uppercase text-portfolio-accent bg-portfolio-accent/10 border border-portfolio-accent/30 rounded-full px-2.5 py-1"

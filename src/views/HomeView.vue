@@ -84,12 +84,6 @@ onMounted(load)
               :to="{ name: 'ProjectDetail', params: { slug: p.slug } }"
               class="block rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4 hover:border-portfolio-accent/40 transition-colors"
             >
-              <img
-                v-if="p.image"
-                :src="p.image"
-                :alt="pick(p.imageAlt) || ''"
-                class="mb-3 w-full max-h-[28rem] object-cover object-top rounded-xl border border-white/[0.06]"
-              >
               <p class="text-lg font-semibold text-portfolio-text">{{ pick(p.title) }}</p>
               <p class="text-sm text-portfolio-muted mt-1">{{ pick(p.teaser || p.description) }}</p>
               <p class="text-sm text-portfolio-accent mt-2">{{ t('home.featuredCta') }} →</p>
