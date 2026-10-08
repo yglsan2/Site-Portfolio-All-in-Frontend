@@ -56,7 +56,7 @@ function goBack() {
 </script>
 
 <template>
-  <div>
+  <div class="w-full">
     <div class="container-pro">
       <button
         type="button"
@@ -186,30 +186,28 @@ function goBack() {
 <style scoped>
 .site-preview {
   position: relative;
-  container-type: inline-size;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  height: clamp(22rem, 52vw, 40rem);
   overflow: hidden;
+  background: #071018;
 }
 
 .site-preview-frame {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 1280px;
-  height: 720px;
+  display: block;
+  width: 100%;
+  height: 100%;
   border: 0;
   pointer-events: none;
-  transform: translate(-50%, -50%) scale(calc(100cqi / 1280px));
+  transform-origin: center top;
   transition: transform 0.45s ease;
 }
 
 .site-preview:hover .site-preview-frame {
-  transform: translate(-50%, -50%) scale(calc(100cqi / 1280px * 1.08));
+  transform: scale(1.03);
 }
 
 .site-preview.is-zooming .site-preview-frame {
-  transform: translate(-50%, -50%) scale(calc(100cqi / 1280px * 1.7));
+  transform: scale(1.08);
   transition-duration: 0.4s;
 }
 
