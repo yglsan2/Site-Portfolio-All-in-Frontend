@@ -23,7 +23,7 @@ export const profile = {
   email: 'superkoal@hotmail.com',
   phone: '07 89 20 24 89',
   phoneHref: 'tel:+33789202489',
-  linkedinUrl: null,
+  linkedinUrl: 'https://www.linkedin.com/in/benjamin-moine-b4aa409a/',
   githubUrl: 'https://github.com/yglsan2',
 }
 

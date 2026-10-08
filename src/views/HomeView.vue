@@ -104,6 +104,15 @@ onMounted(load)
             {{ t('home.phone') }}
           </a>
           <a
+            v-if="profile.linkedinUrl"
+            :href="profile.linkedinUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="touch-target-inline inline-flex items-center gap-2 px-5 py-3 min-h-[44px] rounded-xl border border-white/15 text-portfolio-text hover:border-portfolio-accent/40 transition-colors"
+          >
+            {{ t('home.linkedin') }}
+          </a>
+          <a
             v-if="profile.githubUrl"
             :href="profile.githubUrl"
             target="_blank"

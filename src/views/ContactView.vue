@@ -47,6 +47,10 @@ onMounted(load)
           <p class="text-xs uppercase tracking-wide text-portfolio-muted mb-1">{{ t('contact.location') }}</p>
           <p class="text-portfolio-text text-lg">{{ profile.location }}</p>
         </li>
+        <li v-if="profile.linkedinUrl">
+          <p class="text-xs uppercase tracking-wide text-portfolio-muted mb-1">{{ t('contact.linkedin') }}</p>
+          <a class="link-accent text-lg break-all" :href="profile.linkedinUrl" target="_blank" rel="noopener noreferrer">{{ profile.linkedinUrl }}</a>
+        </li>
         <li v-if="profile.githubUrl">
           <p class="text-xs uppercase tracking-wide text-portfolio-muted mb-1">{{ t('contact.github') }}</p>
           <a class="link-accent text-lg" :href="profile.githubUrl" target="_blank" rel="noopener noreferrer">{{ profile.githubUrl }}</a>
