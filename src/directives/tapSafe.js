@@ -32,7 +32,9 @@ export default {
     const onTouchEnd = (e) => {
       if (!start) return
       const end = getTouchPoint(e)
-      if (distance(start, end) > THRESHOLD) scrollDetected = true
+      // Un tap court réinitialise le drapeau. Sinon il restait vrai après un
+      // scroll sans clic, et le prochain appui (ex. « Projets ») était ignoré.
+      scrollDetected = distance(start, end) > THRESHOLD
       start = null
     }
 
