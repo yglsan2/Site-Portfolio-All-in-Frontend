@@ -206,7 +206,8 @@ export const snippets = [
     "language": "python",
     "description": "Méthodes de models/sql_generator.py. Le dialecte choisi produit le CREATE TABLE des entités, la table d'association, puis les FOREIGN KEY.",
     "code": "    def generate_sql(self, entities: List[Dict[str, Any]], associations: List[Dict[str, Any]]) -> str:\n        if self.dialect not in self.supported_dialects:\n            raise ValueError(f\"Dialecte SQL non supporté : {self.dialect}\")\n            \n        return self.supported_dialects[self.dialect](entities, associations)\n        \n    def _generate_postgresql(self, entities: List[Dict[str, Any]], associations: List[Dict[str, Any]]) -> str:\n        sql = []\n        \n        # Génération des tables d'entités\n        for entity in entities:\n            sql.append(self._generate_table_postgresql(entity))\n            \n        # Génération des tables d'association\n        for association in associations:\n            sql.append(self._generate_association_table_postgresql(association))\n            \n        # Génération des contraintes de clés étrangères\n        for association in associations:\n            sql.extend(self._generate_foreign_keys_postgresql(association))\n            \n        return \"\\n\\n\".join(sql)\n        \n    def _generate_table_postgresql(self, entity: Dict[str, Any]) -> str:\n        table_name = self._sanitize_name(entity[\"name\"])\n        columns = []\n        \n        for attr in entity[\"attributes\"]:\n            columns.append(self._generate_column_postgresql(attr))\n            \n        # Ajout des contraintes de clé primaire\n        pk_columns = [attr[\"name\"] for attr in entity[\"attributes\"] if attr.get(\"is_primary\", False)]\n        if pk_columns:\n            columns.append(f\"PRIMARY KEY ({', '.join(pk_columns)})\")\n            \n        # Ajout des contraintes UNIQUE\n        unique_columns = [attr[\"name\"] for attr in entity[\"attributes\"] if attr.get(\"is_unique\", False)]\n        for col in unique_columns:\n            columns.append(f\"UNIQUE ({col})\")\n            \n        return f\"\"\"CREATE TABLE {table_name} (\n    {',\\n    '.join(columns)}\n);\"\"\"\n        \n    def _generate_column_postgresql(self, attribute: Dict[str, Any]) -> str:\n        name = self._sanitize_name(attribute[\"name\"])\n        type_ = self._map_data_type(attribute[\"type\"], self.dialect)\n        constraints = []\n\n        if attribute.get(\"is_primary\", False):\n            constraints.append(\"PRIMARY KEY\")\n        if attribute.get(\"is_unique\", False):\n            constraints.append(\"UNIQUE\")\n        if attribute.get(\"is_not_null\", True):\n            constraints.append(\"NOT NULL\")\n\n        if \"default\" in attribute:\n            constraints.append(f\"DEFAULT {attribute['default']}\")\n\n        return f\"{name} {type_} {' '.join(constraints)}\"\n        \n    def _generate_association_table_postgresql(self, association: Dict[str, Any]) -> str:\n        table_name = self._sanitize_name(association[\"name\"])\n        columns = []\n        \n        # Ajout des clés étrangères\n        for entity in association[\"entities\"]:\n            entity_name = self._sanitize_name(entity[\"name\"])\n            columns.append(f\"{entity_name}_id INTEGER NOT NULL\")\n            \n        # Ajout des attributs de l'association\n        for attr in association[\"attributes\"]:\n            columns.append(self._generate_column_postgresql(attr))\n            \n        # Clé primaire composite\n        pk_columns = [f\"{entity['name']}_id\" for entity in association[\"entities\"]]\n        columns.append(f\"PRIMARY KEY ({', '.join(pk_columns)})\")\n        \n        return f\"\"\"CREATE TABLE {table_name} (\n    {',\\n    '.join(columns)}\n);\"\"\"\n        \n    def _generate_foreign_keys_postgresql(self, association: Dict[str, Any]) -> List[str]:\n        table_name = self._sanitize_name(association[\"name\"])\n        fk_statements = []\n        \n        for entity in association[\"entities\"]:\n            entity_name = self._sanitize_name(entity[\"name\"])\n            fk_statements.append(f\"\"\"ALTER TABLE {table_name}\n    ADD CONSTRAINT fk_{table_name}_{entity_name}\n    FOREIGN KEY ({entity_name}_id)\n    REFERENCES {entity_name}(id)\n    ON DELETE {entity.get('on_delete', 'CASCADE')}\n    ON UPDATE {entity.get('on_update', 'CASCADE')};\"\"\")\n            \n        return fk_statements",
-    "sortOrder": 1
+    "sortOrder": 1,
+    "kind": "logic"
   },
   {
     "id": 2,
@@ -217,7 +218,8 @@ export const snippets = [
     "language": "python",
     "description": "Classe entière de models/attribute.py. Le constructeur fixe le type et la clé primaire. from_dict restaure aussi la valeur par défaut et les contraintes.",
     "code": "class Attribute:\n    \"\"\"Classe représentant un attribut d'entité MCD\"\"\"\n    \n    def __init__(self, name=\"\", type_name=\"VARCHAR(255)\", is_primary_key=False):\n        self.name = name\n        self.type = type_name\n        self.is_primary_key = is_primary_key\n        self.is_required = False\n        self.default_value = None\n        self.constraints = []\n        \n    def to_dict(self):\n        \"\"\"Convertit l'attribut en dictionnaire\"\"\"\n        return {\n            \"name\": self.name,\n            \"type\": self.type,\n            \"is_primary_key\": self.is_primary_key,\n            \"is_required\": self.is_required,\n            \"default_value\": self.default_value,\n            \"constraints\": self.constraints.copy()\n        }\n        \n    @classmethod\n    def from_dict(cls, data):\n        \"\"\"Crée un attribut à partir d'un dictionnaire\"\"\"\n        attr = cls(\n            name=data.get(\"name\", \"\"),\n            type_name=data.get(\"type\", \"VARCHAR(255)\"),\n            is_primary_key=data.get(\"is_primary_key\", False)\n        )\n        attr.is_required = data.get(\"is_required\", False)\n        attr.default_value = data.get(\"default_value\")\n        attr.constraints = data.get(\"constraints\", [])\n        return attr\n        \n    def __str__(self):\n        \"\"\"Représentation textuelle de l'attribut\"\"\"\n        prefix = \"# \" if self.is_primary_key else \"\"\n        return f\"{prefix}{self.name}: {self.type}\"\n        \n    def __repr__(self):\n        return f\"Attribute('{self.name}', '{self.type}', pk={self.is_primary_key})\" ",
-    "sortOrder": 2
+    "sortOrder": 2,
+    "kind": "model"
   },
   {
     "id": 3,
@@ -228,7 +230,8 @@ export const snippets = [
     "language": "python",
     "description": "Méthodes de models/entity.py. add_attribute enregistre le nom, le type et la clé primaire, puis update_layout recalcule la hauteur selon le nombre d'attributs.",
     "code": "    def add_attribute(self, name, type_name, is_primary_key=False, nullable=True, default_value=None):\n        \"\"\"Ajoute un attribut à l'entité\"\"\"\n        attribute = {\n            \"name\": name,\n            \"type\": type_name,\n            \"is_primary_key\": is_primary_key,\n            \"nullable\": nullable,\n            \"default_value\": default_value\n        }\n        self.attributes.append(attribute)\n        self.update_layout()\n        self.signals.attribute_added.emit(name, type_name)\n        self.update()  # Redessiner l'entité\n        \n    def get_available_types(self):\n        \"\"\"Retourne la liste des types d'attributs disponibles\"\"\"\n        return [\n            \"VARCHAR(255)\", \"VARCHAR(100)\", \"VARCHAR(50)\", \"VARCHAR(25)\",\n            \"TEXT\", \"LONGTEXT\",\n            \"INTEGER\", \"INT\", \"BIGINT\", \"SMALLINT\",\n            \"DECIMAL(10,2)\", \"DECIMAL(8,2)\", \"DECIMAL(5,2)\",\n            \"FLOAT\", \"DOUBLE\",\n            \"DATE\", \"DATETIME\", \"TIMESTAMP\",\n            \"TIME\", \"YEAR\",\n            \"BOOLEAN\", \"BOOL\",\n            \"BLOB\", \"LONGBLOB\",\n            \"ENUM\", \"SET\"\n        ]\n        \n\n        \n    def update_layout(self):\n        \"\"\"Met à jour la disposition des éléments\"\"\"\n        # Calculer la nouvelle hauteur\n        total_height = 50  # Titre + séparateur\n        total_height += len(self.attributes) * self.attribute_height\n        total_height += self.padding\n        \n        # Ajuster la hauteur minimale\n        if total_height < self.min_height:\n            total_height = self.min_height\n            \n        # Mettre à jour la hauteur\n        self.height = total_height\n        self.update()  # Redessiner l'entité",
-    "sortOrder": 3
+    "sortOrder": 3,
+    "kind": "logic"
   },
   {
     "id": 4,
@@ -239,7 +242,8 @@ export const snippets = [
     "language": "python",
     "description": "Méthodes de models/model_validator.py. Noms d'entité uniques, attributs manquants, association sans entité, cardinalité refusée si elle n'est pas dans la liste autorisée.",
     "code": "    def _validate_entities(self, entities: List[Dict]) -> List[ValidationResult]:\n        \"\"\"Valide les entités\"\"\"\n        results = []\n        \n        # Vérifier les noms uniques\n        entity_names = []\n        for entity in entities:\n            name = entity.get(\"name\", \"\")\n            if name in entity_names:\n                results.append(ValidationResult(\n                    ValidationRule.ENTITY_NAME_UNIQUE,\n                    ValidationLevel.ERROR,\n                    f\"Nom d'entité dupliqué: {name}\",\n                    entity.get(\"id\")\n                ))\n            else:\n                entity_names.append(name)\n            \n            # Vérifier qu'une entité a des attributs\n            if not entity.get(\"attributes\"):\n                results.append(ValidationResult(\n                    ValidationRule.ENTITY_HAS_ATTRIBUTES,\n                    ValidationLevel.WARNING,\n                    f\"L'entité '{name}' n'a pas d'attributs\",\n                    entity.get(\"id\")\n                ))\n            \n            # Vérifier la convention de nommage\n            if not self._check_naming_convention(name):\n                results.append(ValidationResult(\n                    ValidationRule.NAMING_CONVENTION,\n                    ValidationLevel.WARNING,\n                    f\"Le nom '{name}' ne suit pas la convention de nommage\",\n                    entity.get(\"id\")\n                ))\n        \n        return results\n    \n    def _validate_associations(self, associations: List[Dict], entities: List[Dict]) -> List[ValidationResult]:\n        \"\"\"Valide les associations\"\"\"\n        results = []\n        \n        # Vérifier les noms uniques\n        association_names = []\n        for association in associations:\n            name = association.get(\"name\", \"\")\n            if name in association_names:\n                results.append(ValidationResult(\n                    ValidationRule.ASSOCIATION_NAME_UNIQUE,\n                    ValidationLevel.ERROR,\n                    f\"Nom d'association dupliqué: {name}\",\n                    association.get(\"id\")\n                ))\n            else:\n                association_names.append(name)\n            \n            # Vérifier qu'une association a des entités liées\n            if not association.get(\"entities\"):\n                results.append(ValidationResult(\n                    ValidationRule.ASSOCIATION_HAS_ENTITIES,\n                    ValidationLevel.ERROR,\n                    f\"L'association '{name}' n'a pas d'entités liées\",\n                    association.get(\"id\")\n                ))\n            \n            # Vérifier les cardinalités\n            cardinalities = association.get(\"cardinalities\", {})\n            for entity_name, cardinality in cardinalities.items():\n                if not self._is_valid_cardinality(cardinality):\n                    results.append(ValidationResult(\n                        ValidationRule.CARDINALITY_VALID,\n                        ValidationLevel.ERROR,\n                        f\"Cardinalité invalide '{cardinality}' pour l'entité '{entity_name}'\",\n                        association.get(\"id\")\n                    ))\n        \n        return results",
-    "sortOrder": 4
+    "sortOrder": 4,
+    "kind": "validation"
   },
   {
     "id": 5,
@@ -250,7 +254,8 @@ export const snippets = [
     "language": "python",
     "description": "Classe de models/business_rules.py. Une règle porte une cible, une condition et une action. from_dict reconstruit l'objet à partir du type énuméré.",
     "code": "class RuleType(Enum):\n    \"\"\"Types de règles de gestion\"\"\"\n    ENTITY = \"entity\"\n    ASSOCIATION = \"association\"\n    ATTRIBUTE = \"attribute\"\n    GLOBAL = \"global\"\n\nclass BusinessRule:\n    \"\"\"Représente une règle de gestion\"\"\"\n    \n    def __init__(self, name: str, rule_type: RuleType, description: str,\n                 target: str = \"\", condition: str = \"\", action: str = \"\"):\n        self.name = name\n        self.type = rule_type\n        self.description = description\n        self.target = target  # Entité, association ou attribut concerné\n        self.condition = condition  # Condition de la règle\n        self.action = action  # Action à effectuer\n        self.is_enabled = True\n        self.priority = 0  # Priorité (0 = normal, >0 = haute priorité)\n        \n    def to_dict(self) -> Dict[str, Any]:\n        \"\"\"Convertit en dictionnaire\"\"\"\n        return {\n            \"name\": self.name,\n            \"type\": self.type.value,\n            \"description\": self.description,\n            \"target\": self.target,\n            \"condition\": self.condition,\n            \"action\": self.action,\n            \"is_enabled\": self.is_enabled,\n            \"priority\": self.priority\n        }\n    \n    @classmethod\n    def from_dict(cls, data: Dict[str, Any]) -> 'BusinessRule':\n        \"\"\"Crée depuis un dictionnaire\"\"\"\n        rule = cls(\n            data[\"name\"],\n            RuleType(data[\"type\"]),\n            data.get(\"description\", \"\"),\n            data.get(\"target\", \"\"),\n            data.get(\"condition\", \"\"),\n            data.get(\"action\", \"\")\n        )\n        rule.is_enabled = data.get(\"is_enabled\", True)\n        rule.priority = data.get(\"priority\", 0)\n        return rule",
-    "sortOrder": 5
+    "sortOrder": 5,
+    "kind": "model"
   },
   {
     "id": 6,
@@ -261,7 +266,8 @@ export const snippets = [
     "language": "python",
     "description": "Méthode de models/entity.py. Elle renvoie le nom, la position, la copie des attributs et le marqueur d'entité faible.",
     "code": "    def get_data(self):\n        \"\"\"Retourne les données de l'entité pour export\"\"\"\n        return {\n            \"name\": self.name,\n            \"position\": {\"x\": self.pos().x(), \"y\": self.pos().y()},\n            \"attributes\": self.attributes.copy(),\n            \"is_weak\": self.is_weak\n        }",
-    "sortOrder": 6
+    "sortOrder": 6,
+    "kind": "logic"
   },
   {
     "id": 7,
@@ -272,7 +278,8 @@ export const snippets = [
     "language": "python",
     "description": "Méthodes de models/association.py. add_entity mémorise la cardinalité. set_cardinality la modifie et émet le signal correspondant.",
     "code": "    def add_entity(self, entity_name, cardinality=\"1\"):\n        \"\"\"Ajoute une entité à l'association\"\"\"\n        if entity_name not in self.entities:\n            self.entities.append(entity_name)\n            self.cardinalities[entity_name] = cardinality\n            \n    def remove_entity(self, entity_name):\n        \"\"\"Retire une entité de l'association\"\"\"\n        if entity_name in self.entities:\n            self.entities.remove(entity_name)\n            if entity_name in self.cardinalities:\n                del self.cardinalities[entity_name]\n                \n    def set_cardinality(self, entity_name, cardinality):\n        \"\"\"Définit la cardinalité pour une entité\"\"\"\n        if entity_name in self.entities:\n            self.cardinalities[entity_name] = cardinality\n            self.signals.cardinality_changed.emit(entity_name, cardinality)",
-    "sortOrder": 7
+    "sortOrder": 7,
+    "kind": "logic"
   },
   {
     "id": 8,
@@ -283,7 +290,8 @@ export const snippets = [
     "language": "javascript",
     "description": "Fonction de BooksView.vue. Elle calcule la distance entre deux points à partir de leurs latitudes et longitudes.",
     "code": "function calculateDistance(lat1, lon1, lat2, lon2) {\n  const R = 6371 // Rayon de la Terre en km\n  const dLat = (lat2 - lat1) * Math.PI / 180\n  const dLon = (lon2 - lon1) * Math.PI / 180\n  const a = \n    Math.sin(dLat/2) * Math.sin(dLat/2) +\n    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * \n    Math.sin(dLon/2) * Math.sin(dLon/2)\n  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))\n  return R * c\n}",
-    "sortOrder": 1
+    "sortOrder": 1,
+    "kind": "logic"
   },
   {
     "id": 9,
@@ -294,7 +302,8 @@ export const snippets = [
     "language": "java",
     "description": "Constructeurs de entity/Book.java. Le constructeur métier reçoit le titre, l'auteur, l'année, le genre, l'âge, la langue, l'état, la ville et le propriétaire.",
     "code": "    // Constructeurs\n    public Book() {\n        // Constructeur par défaut requis par JPA\n    }\n\n    public Book(String title, String author, Integer publicationYear, Genre genre, \n                TargetAge targetAge, Language language, BookCondition condition, String city, User owner) {\n        this.title = title;\n        this.author = author;\n        this.publicationYear = publicationYear;\n        this.genre = genre;\n        this.targetAge = targetAge;\n        this.language = language;\n        this.condition = condition;\n        this.city = city;\n        this.owner = owner;\n    }",
-    "sortOrder": 2
+    "sortOrder": 2,
+    "kind": "constructor"
   },
   {
     "id": 10,
@@ -305,7 +314,8 @@ export const snippets = [
     "language": "javascript",
     "description": "Fonctions de BooksView.vue. updateNearbyBooksCount compte les livres à 50 km ou moins. getDistanceFromUser arrondit la distance d'un livre.",
     "code": "function updateNearbyBooksCount() {\n  if (!userCoordinates.value) return\n\n  // Compter les livres dans un rayon de 50km\n  const nearbyBooks = books.value.filter(book => {\n    if (!book.location) return false\n    \n    const distance = calculateDistance(\n      userCoordinates.value.lat,\n      userCoordinates.value.lng,\n      book.location.coordinates.lat,\n      book.location.coordinates.lng\n    )\n    \n    return distance <= 50 // 50km\n  })\n\n  nearbyBooksCount.value = nearbyBooks.length\n}\n\nfunction getDistanceFromUser(book) {\n  if (!userCoordinates.value || !book.location) return null\n  \n  const distance = calculateDistance(\n    userCoordinates.value.lat,\n    userCoordinates.value.lng,\n    book.location.coordinates.lat,\n    book.location.coordinates.lng\n  )\n  \n  return Math.round(distance)\n}",
-    "sortOrder": 3
+    "sortOrder": 3,
+    "kind": "logic"
   },
   {
     "id": 11,
@@ -316,7 +326,8 @@ export const snippets = [
     "language": "java",
     "description": "Méthodes de entity/Book.java. isAvailable croise le statut et la date. incrementBorrows compte les emprunts. Les trois méthodes suivantes retrouvent couverture, dos et intérieur.",
     "code": "    public boolean isAvailable() {\n        return status == BookStatus.AVAILABLE && \n               (availableFrom == null || availableFrom.isBefore(LocalDateTime.now()));\n    }\n\n    public boolean isCurrentlyBorrowed() {\n        return currentBorrowerId != null;\n    }\n\n    public void incrementBorrows() {\n        this.totalBorrows++;\n    }\n\n    public BookPhoto getCoverPhoto() {\n        return photos.stream()\n                .filter(photo -> photo.getType() == BookPhoto.PhotoType.COVER)\n                .findFirst()\n                .orElse(null);\n    }\n\n    public BookPhoto getBackPhoto() {\n        return photos.stream()\n                .filter(photo -> photo.getType() == BookPhoto.PhotoType.BACK)\n                .findFirst()\n                .orElse(null);\n    }\n\n    public BookPhoto getInteriorPhoto() {\n        return photos.stream()\n                .filter(photo -> photo.getType() == BookPhoto.PhotoType.INTERIOR)\n                .findFirst()\n                .orElse(null);\n    }",
-    "sortOrder": 4
+    "sortOrder": 4,
+    "kind": "model"
   },
   {
     "id": 12,
@@ -327,7 +338,8 @@ export const snippets = [
     "language": "javascript",
     "description": "Computed de BooksView.vue. Le catalogue filtre le titre, l'auteur, la catégorie et la langue. Si une position est connue, les livres restants sont triés du plus proche au plus loin.",
     "code": "const filteredBooks = computed(() => {\n  let filtered = books.value.filter((book) => {\n    const matchesSearch =\n      !searchQuery.value ||\n      book.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||\n      book.author.toLowerCase().includes(searchQuery.value.toLowerCase())\n\n    const matchesCategory = !selectedCategory.value || book.category === selectedCategory.value\n    const matchesLanguage = !selectedLanguage.value || book.language === selectedLanguage.value\n\n    return matchesSearch && matchesCategory && matchesLanguage\n  })\n\n  // Si l'utilisateur a activé la géolocalisation, trier par proximité\n  if (userCoordinates.value && userLocation.value) {\n    filtered.sort((a, b) => {\n      if (!a.location || !b.location) return 0\n      \n      const distanceA = calculateDistance(\n        userCoordinates.value.lat,\n        userCoordinates.value.lng,\n        a.location.coordinates.lat,\n        a.location.coordinates.lng\n      )\n      \n      const distanceB = calculateDistance(\n        userCoordinates.value.lat,\n        userCoordinates.value.lng,\n        b.location.coordinates.lat,\n        b.location.coordinates.lng\n      )\n      \n      return distanceA - distanceB\n    })\n  }\n\n  return filtered\n})",
-    "sortOrder": 5
+    "sortOrder": 5,
+    "kind": "logic"
   },
   {
     "id": 13,
@@ -338,7 +350,8 @@ export const snippets = [
     "language": "java",
     "description": "Méthode de MembershipService.java. Elle refuse un membre sans nom, prénom, numéro ou email, et un email sans @.",
     "code": "    /**\n     * Valide les données d'un membre\n     * @param memberData Données à valider\n     * @return Résultat de la validation\n     */\n    public Map<String, Object> validateMemberData(MembershipCardRequest.MemberData memberData) {\n        Map<String, Object> result = new HashMap<>();\n        \n        if (memberData == null) {\n            result.put(\"valid\", false);\n            result.put(\"message\", \"Les données du membre sont requises\");\n            return result;\n        }\n        \n        if (memberData.getName() == null || memberData.getName().trim().isEmpty()) {\n            result.put(\"valid\", false);\n            result.put(\"message\", \"Le nom est requis\");\n            return result;\n        }\n        \n        if (memberData.getFirstName() == null || memberData.getFirstName().trim().isEmpty()) {\n            result.put(\"valid\", false);\n            result.put(\"message\", \"Le prénom est requis\");\n            return result;\n        }\n        \n        if (memberData.getMemberNumber() == null || memberData.getMemberNumber().trim().isEmpty()) {\n            result.put(\"valid\", false);\n            result.put(\"message\", \"Le numéro d'adhésion est requis\");\n            return result;\n        }\n        \n        if (memberData.getEmail() == null || memberData.getEmail().trim().isEmpty()) {\n            result.put(\"valid\", false);\n            result.put(\"message\", \"L'email est requis\");\n            return result;\n        }\n        \n        // Validation basique de l'email\n        if (!memberData.getEmail().contains(\"@\")) {\n            result.put(\"valid\", false);\n            result.put(\"message\", \"L'email n'est pas valide\");\n            return result;\n        }\n        \n        result.put(\"valid\", true);\n        result.put(\"message\", \"Données valides\");\n        return result;\n    }",
-    "sortOrder": 6
+    "sortOrder": 6,
+    "kind": "validation"
   },
   {
     "id": 14,
@@ -349,7 +362,8 @@ export const snippets = [
     "language": "java",
     "description": "Méthode de MembershipService.java. Elle valide le membre, prépare les noms de fichiers, puis demande le recto et le verso.",
     "code": "    /**\n     * Génère une carte d'adhésion complète\n     * @param request Données du membre et options\n     * @return Réponse avec les URLs des images générées\n     */\n    public MembershipCardResponse generateMembershipCard(MembershipCardRequest request) {\n        try {\n            // Valider les données du membre\n            Map<String, Object> validation = validateMemberData(request.getMemberData());\n            if (!(Boolean) validation.get(\"valid\")) {\n                return MembershipCardResponse.error((String) validation.get(\"message\"));\n            }\n\n            // Créer le dossier de stockage si nécessaire\n            Path storageDir = Paths.get(storagePath);\n            if (!Files.exists(storageDir)) {\n                Files.createDirectories(storageDir);\n            }\n\n            // Générer les noms de fichiers\n            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern(\"yyyyMMdd_HHmmss\"));\n            String memberNumber = request.getMemberData().getMemberNumber();\n            String frontFileName = String.format(\"card_front_%s_%s.png\", memberNumber, timestamp);\n            String backFileName = String.format(\"card_back_%s_%s.png\", memberNumber, timestamp);\n\n            // Générer le recto de la carte\n            String frontImageUrl = generateCardFront(request.getMemberData(), frontFileName);\n            \n            // Générer le verso de la carte\n            String backImageUrl = generateCardBack(request.getMemberData(), backFileName);\n\n            return MembershipCardResponse.success(memberNumber, frontImageUrl, backImageUrl);\n\n        } catch (Exception e) {\n            return MembershipCardResponse.error(\"Erreur lors de la génération de la carte: \" + e.getMessage());\n        }\n    }",
-    "sortOrder": 7
+    "sortOrder": 7,
+    "kind": "logic"
   },
   {
     "id": 15,
@@ -360,7 +374,8 @@ export const snippets = [
     "language": "python",
     "description": "Fonctions de doki_light/rag/chunking.py. Le texte est découpé en mots avec chevauchement. Les concepts métier sont reconnus par mots-clés.",
     "code": "def chunk_text(text: str, chunk_size: int = 400, overlap: int = 50) -> list[str]:\n\t\"\"\"Découpe un texte en chunks de mots avec overlap.\"\"\"\n\tif not text or not text.strip():\n\t\treturn []\n\n\twords = text.split()\n\tif len(words) <= chunk_size:\n\t\treturn [\" \".join(words)]\n\n\tstep = max(1, chunk_size - overlap)\n\tchunks: list[str] = []\n\tfor i in range(0, len(words), step):\n\t\tchunk = \" \".join(words[i : i + chunk_size]).strip()\n\t\tif chunk:\n\t\t\tchunks.append(chunk)\n\t\tif i + chunk_size >= len(words):\n\t\t\tbreak\n\treturn chunks\n\n\ndef extract_concepts(text: str) -> list[str]:\n\t\"\"\"Extrait les concepts métier présents dans un texte.\"\"\"\n\tnorm = (text or \"\").lower()\n\tfound: list[str] = []\n\tfor concept, mots in CONCEPT_KEYWORDS:\n\t\tif any(mot in norm for mot in mots):\n\t\t\tfound.append(concept)\n\treturn found",
-    "sortOrder": 7
+    "sortOrder": 7,
+    "kind": "logic"
   },
   {
     "id": 16,
@@ -371,7 +386,8 @@ export const snippets = [
     "language": "python",
     "description": "Fonctions de doki_light/actions/sales_order.py. La phrase est lue pour en sortir le client, l'article et la quantité. validate exige un client identifié avec une confiance d'au moins 0,55.",
     "code": "def parse_intent(text: str) -> dict:\n\tcustomer_raw = extract_named(text, [\"client\", \"customer\", \"pour\"])\n\titem_raw = extract_item_raw(text)\n\tqty = extract_qty(text, default=1.0)\n\tcustomer = resolve_customer(customer_raw)\n\titem = resolve_item(item_raw)\n\treturn {\n\t\t\"customer_raw\": customer_raw,\n\t\t\"customer\": customer.get(\"name\"),\n\t\t\"customer_name\": customer.get(\"customer_name\"),\n\t\t\"customer_confidence\": customer.get(\"confidence\", 0),\n\t\t\"customer_candidates\": customer.get(\"candidates\") or [],\n\t\t\"item_raw\": item_raw,\n\t\t\"item_code\": item.get(\"name\"),\n\t\t\"item_name\": item.get(\"item_name\"),\n\t\t\"item_confidence\": item.get(\"confidence\", 0),\n\t\t\"qty\": qty,\n\t\t\"source_text\": text,\n\t}\n\n\ndef validate(payload: dict) -> list[str]:\n\tmissing = []\n\tif not payload.get(\"customer\"):\n\t\tmissing.append(\"customer\")\n\telif payload.get(\"customer_confidence\", 0) < 0.55:\n\t\tmissing.append(\"customer_disambiguation\")\n\treturn missing",
-    "sortOrder": 8
+    "sortOrder": 8,
+    "kind": "logic"
   },
   {
     "id": 2001,
@@ -382,7 +398,8 @@ export const snippets = [
     "language": "python",
     "description": "Fonctions de doki_light/api/indexing.py. _should_index écarte les DocTypes internes. on_document_change enqueue l'indexation après le commit.",
     "code": "def _should_index(doctype: str) -> bool:\n\tif doctype in INTERNAL_DOCTYPES or doctype.startswith(\"Doki \"):\n\t\treturn False\n\tsettings = get_settings()\n\tif settings and not settings.auto_index:\n\t\treturn False\n\treturn doctype in _get_indexed_doctypes()\n\n\ndef on_document_change(doc, method=None):\n\t\"\"\"Hook after_insert / on_update.\"\"\"\n\tif not _should_index(doc.doctype):\n\t\treturn\n\t# Ignore drafts non soumis pour DocTypes submittable (index seulement submitted + draft utiles)\n\tfrappe.enqueue(\n\t\t\"doki_light.api.indexing.index_document\",\n\t\tqueue=\"short\",\n\t\tdoctype=doc.doctype,\n\t\tname=doc.name,\n\t\tenqueue_after_commit=True,\n\t\tdeduplicate=True,\n\t\tjob_id=f\"doki_index::{doc.doctype}::{doc.name}\",\n\t)",
-    "sortOrder": 1
+    "sortOrder": 1,
+    "kind": "logic"
   },
   {
     "id": 2002,
@@ -393,7 +410,8 @@ export const snippets = [
     "language": "python",
     "description": "Fonctions de doki_light/api/chat.py. L'envoi délègue à l'orchestrateur. La lecture d'une conversation vérifie l'utilisateur, puis reconstruit les messages et leurs citations.",
     "code": "@frappe.whitelist()\ndef send_message(message: str, conversation: str | None = None, agent: str | None = None):\n\treturn handle_message(message=message, conversation=conversation, agent=agent)\n\n\n@frappe.whitelist()\ndef list_conversations(limit: int = 30):\n\tuser = frappe.session.user\n\treturn frappe.get_all(\n\t\t\"Doki Conversation\",\n\t\tfilters={\"user\": user},\n\t\tfields=[\"name\", \"title\", \"agent\", \"status\", \"modified\"],\n\t\torder_by=\"modified desc\",\n\t\tlimit_page_length=int(limit or 30),\n\t)\n\n\n@frappe.whitelist()\ndef get_conversation(name: str):\n\tdoc = frappe.get_doc(\"Doki Conversation\", name)\n\tif doc.user != frappe.session.user and \"System Manager\" not in frappe.get_roles():\n\t\tfrappe.throw(_(\"Accès refusé\"), frappe.PermissionError)\n\n\tmessages = []\n\tfor m in doc.messages or []:\n\t\tcitations = []\n\t\tif m.citations_json:\n\t\t\ttry:\n\t\t\t\tcitations = json.loads(m.citations_json)\n\t\t\texcept Exception:\n\t\t\t\tcitations = []\n\t\tmessages.append(\n\t\t\t{\n\t\t\t\t\"role\": m.role,\n\t\t\t\t\"content\": m.content,\n\t\t\t\t\"agent\": m.agent,\n\t\t\t\t\"pending_action\": m.pending_action,\n\t\t\t\t\"citations\": citations,\n\t\t\t}\n\t\t)\n\treturn {\n\t\t\"name\": doc.name,\n\t\t\"title\": doc.title,\n\t\t\"agent\": doc.agent,\n\t\t\"status\": doc.status,\n\t\t\"messages\": messages,\n\t}",
-    "sortOrder": 2
+    "sortOrder": 2,
+    "kind": "api"
   },
   {
     "id": 2003,
@@ -404,7 +422,8 @@ export const snippets = [
     "language": "python",
     "description": "Classe de doki_settings.py. validate borne la taille des chunks, le top_k, le score minimum et le quota. get_settings charge le Single DocType, ou le crée.",
     "code": "class DokiSettings(Document):\n\tdef validate(self):\n\t\tself.chunk_size = max(100, int(self.chunk_size or 400))\n\t\tself.chunk_overlap = max(0, min(int(self.chunk_overlap or 50), self.chunk_size // 2))\n\t\tself.top_k = max(1, min(int(self.top_k or 6), 20))\n\t\tself.min_score = max(0.0, min(float(self.min_score or 0.28), 1.0))\n\t\tself.max_candidates = max(100, min(int(self.max_candidates or 1200), 5000))\n\t\tself.llm_temperature = max(0.0, min(float(self.llm_temperature or 0.25), 1.2))\n\t\tself.llm_timeout = max(15, min(int(self.llm_timeout or 120), 300))\n\t\tself.rate_limit_per_minute = max(5, min(int(self.rate_limit_per_minute or 40), 300))\n\t\tself.index_limit_per_doctype = max(10, min(int(self.index_limit_per_doctype or 300), 5000))\n\t\tself.confidence_threshold = max(0.1, min(float(self.confidence_threshold or 0.42), 0.9))\n\t\tself.max_history_turns = max(4, min(int(self.max_history_turns or 12), 40))\n\n\tdef get_indexed_doctypes(self):\n\t\traw = self.indexed_doctypes or DEFAULT_DOCTYPES\n\t\tout = []\n\t\tfor d in raw.split(\",\"):\n\t\t\tname = d.strip()\n\t\t\tif name and name not in out:\n\t\t\t\tout.append(name)\n\t\treturn out\n\n\ndef get_settings():\n\tif not frappe.db.exists(\"DocType\", \"Doki Settings\"):\n\t\treturn None\n\ttry:\n\t\treturn frappe.get_single(\"Doki Settings\")\n\texcept frappe.DoesNotExistError:\n\t\tdoc = frappe.new_doc(\"Doki Settings\")\n\t\tdoc.insert(ignore_permissions=True)\n\t\tfrappe.db.commit()\n\t\treturn doc",
-    "sortOrder": 3
+    "sortOrder": 3,
+    "kind": "validation"
   },
   {
     "id": 2004,
@@ -415,7 +434,8 @@ export const snippets = [
     "language": "python",
     "description": "Fonction de doki_light/api/indexing.py. Si le hash du texte n'a pas changé, elle s'arrête. Sinon elle redécoupe, vectorise et insère chaque chunk.",
     "code": "def index_document(doctype: str, name: str):\n\t\"\"\"Indexe un document ERP en chunks embeddés (batch embeddings).\"\"\"\n\tif not frappe.db.exists(doctype, name):\n\t\treturn\n\tif not frappe.has_permission(doctype, \"read\"):\n\t\t# Indexation système: on autorise via ignore mais on ne fuit pas côté chat\n\t\tpass\n\n\tsettings = get_settings()\n\tchunk_size = int(settings.chunk_size or 400) if settings else 400\n\toverlap = int(settings.chunk_overlap or 50) if settings else 50\n\tmodel_name = (settings.embedding_model if settings else None) or \"all-MiniLM-L6-v2\"\n\n\tdoc = frappe.get_doc(doctype, name)\n\ttext = document_to_text(doctype, doc.as_dict())\n\tdoc_hash = content_hash(text)\n\troute = desk_route(doctype, name)\n\ttitle = _title_for(doc)\n\n\texisting = frappe.get_all(\n\t\t\"Doki Document Chunk\",\n\t\tfilters={\"ref_doctype\": doctype, \"ref_name\": name},\n\t\tfields=[\"name\", \"content_hash\"],\n\t\tlimit=1,\n\t)\n\tif existing and existing[0].content_hash == doc_hash:\n\t\treturn\n\n\tdelete_chunks(doctype, name)\n\tchunks = chunk_text(text, chunk_size=chunk_size, overlap=overlap)\n\tif not chunks:\n\t\treturn\n\n\tvectors = embed_texts(chunks, model_name=model_name)\n\tfor idx, chunk in enumerate(chunks):\n\t\tconcepts = extract_concepts(chunk)\n\t\trow = frappe.get_doc(\n\t\t\t{\n\t\t\t\t\"doctype\": \"Doki Document Chunk\",\n\t\t\t\t\"ref_doctype\": doctype,\n\t\t\t\t\"ref_name\": name,\n\t\t\t\t\"chunk_index\": idx,\n\t\t\t\t\"content_hash\": doc_hash,\n\t\t\t\t\"chunk_text\": chunk,\n\t\t\t\t\"embedding_json\": dump_embedding(vectors[idx]),\n\t\t\t\t\"concepts\": json.dumps(concepts, ensure_ascii=False),\n\t\t\t\t\"title\": title,\n\t\t\t\t\"route\": route,\n\t\t\t\t\"source_modified\": doc.modified,\n\t\t\t}\n\t\t)\n\t\trow.insert(ignore_permissions=True)\n\n\tfrappe.db.commit()",
-    "sortOrder": 4
+    "sortOrder": 4,
+    "kind": "logic"
   },
   {
     "id": 2005,
@@ -426,7 +446,8 @@ export const snippets = [
     "language": "python",
     "description": "Fonction de doki_light/rag/retrieval.py. Elle écarte les documents interdits, score le cosinus et les concepts, puis garde au plus deux chunks par document.",
     "code": "def search(\n\tquery: str,\n\ttop_k: int = 5,\n\tallowed_doctypes: list[str] | None = None,\n\tuser: str | None = None,\n\tmodel_name: str = \"all-MiniLM-L6-v2\",\n\tmin_score: float = 0.28,\n\tmax_candidates: int = 1200,\n) -> list[dict]:\n\t\"\"\"Retourne les meilleurs chunks accessibles à l'utilisateur.\"\"\"\n\tuser = user or frappe.session.user\n\tquery = (query or \"\").strip()\n\tif not query:\n\t\treturn []\n\n\tfilters: dict = {}\n\tif allowed_doctypes:\n\t\tfilters[\"ref_doctype\"] = [\"in\", allowed_doctypes]\n\n\t# Préfiltre lexical léger pour réduire le volume\n\ttokens = [t for t in query.lower().split() if len(t) > 2][:6]\n\trows = frappe.get_all(\n\t\t\"Doki Document Chunk\",\n\t\tfilters=filters,\n\t\tfields=[\n\t\t\t\"name\",\n\t\t\t\"ref_doctype\",\n\t\t\t\"ref_name\",\n\t\t\t\"chunk_text\",\n\t\t\t\"embedding_json\",\n\t\t\t\"concepts\",\n\t\t\t\"title\",\n\t\t\t\"route\",\n\t\t\t\"source_modified\",\n\t\t],\n\t\torder_by=\"modified desc\",\n\t\tlimit_page_length=int(max_candidates or 1200),\n\t)\n\n\tif tokens and len(rows) > 200:\n\t\tboosted = []\n\t\trest = []\n\t\tfor row in rows:\n\t\t\tblob = f\"{row.title or ''} {row.chunk_text or ''}\".lower()\n\t\t\tif any(t in blob for t in tokens):\n\t\t\t\tboosted.append(row)\n\t\t\telse:\n\t\t\t\trest.append(row)\n\t\trows = (boosted + rest)[: int(max_candidates or 1200)]\n\n\tquery_embedding = np.asarray(embed_text(query, model_name=model_name), dtype=np.float32)\n\tif query_embedding.size == 0:\n\t\treturn []\n\n\tquery_concepts = set(extract_concepts(query))\n\tquery_words = set(query.lower().split())\n\n\t# Cache permission doctype → bool\n\tperm_cache: dict[str, bool] = {}\n\tdoc_perm_cache: dict[tuple[str, str], bool] = {}\n\n\tvectors = []\n\tvalid_rows = []\n\tfor row in rows:\n\t\tdt = row.ref_doctype\n\t\tif dt not in perm_cache:\n\t\t\ttry:\n\t\t\t\tperm_cache[dt] = bool(frappe.has_permission(dt, \"read\", user=user))\n\t\t\texcept Exception:\n\t\t\t\tperm_cache[dt] = False\n\t\tif not perm_cache[dt]:\n\t\t\tcontinue\n\n\t\tkey = (dt, row.ref_name)\n\t\tif key not in doc_perm_cache:\n\t\t\ttry:\n\t\t\t\tif not frappe.db.exists(dt, row.ref_name):\n\t\t\t\t\tdoc_perm_cache[key] = False\n\t\t\t\telse:\n\t\t\t\t\tdoc_perm_cache[key] = bool(\n\t\t\t\t\t\tfrappe.has_permission(dt, \"read\", doc=row.ref_name, user=user)\n\t\t\t\t\t)\n\t\t\texcept Exception:\n\t\t\t\tdoc_perm_cache[key] = perm_cache[dt]\n\t\tif not doc_perm_cache[key]:\n\t\t\tcontinue\n\n\t\tarr = load_embedding_array(row.embedding_json)\n\t\tif arr is None:\n\t\t\tcontinue\n\t\tvectors.append(arr)\n\t\tvalid_rows.append(row)\n\n\tif not valid_rows:\n\t\treturn []\n\n\tmatrix = np.vstack(vectors)\n\tsemantic_scores = matrix_cosine(query_embedding, matrix)\n\n\tscored: list[dict] = []\n\tfor idx, row in enumerate(valid_rows):\n\t\tsemantic = float(semantic_scores[idx])\n\t\tchunk_concepts = parse_concepts(row.concepts)\n\t\tconcept_match = len(query_concepts & chunk_concepts)\n\t\tconcept_bonus = 0.18 * concept_match if concept_match else 0.0\n\t\ttext = row.chunk_text or \"\"\n\t\tquality = min(1.0, len(text) / 500) * 0.08\n\t\ttext_words = set(text.lower().split())\n\t\toverlap = len(query_words & text_words)\n\t\tcontext_score = min(0.22, overlap * 0.04)\n\t\t# léger boost si token exact dans le titre\n\t\ttitle_bonus = 0.08 if any(t in (row.title or \"\").lower() for t in tokens) else 0.0\n\t\tfinal_score = semantic * 0.62 + concept_bonus + quality + context_score + title_bonus\n\n\t\tif final_score < float(min_score or 0.28):\n\t\t\tcontinue\n\n\t\tscored.append(\n\t\t\t{\n\t\t\t\t\"chunk_name\": row.name,\n\t\t\t\t\"ref_doctype\": row.ref_doctype,\n\t\t\t\t\"ref_name\": row.ref_name,\n\t\t\t\t\"chunk_text\": text,\n\t\t\t\t\"title\": row.title or row.ref_name,\n\t\t\t\t\"route\": row.route or scrub_route(row.ref_doctype, row.ref_name),\n\t\t\t\t\"score\": round(final_score, 4),\n\t\t\t\t\"semantic_score\": round(semantic, 4),\n\t\t\t\t\"excerpt\": truncate(text, 280),\n\t\t\t\t\"source\": \"rag\",\n\t\t\t}\n\t\t)\n\n\tscored.sort(key=lambda x: x[\"score\"], reverse=True)\n\n\t# Diversité: max 2 chunks par document source\n\tper_doc: dict[str, int] = {}\n\tresults = []\n\tseen_sig = set()\n\tfor item in scored:\n\t\tdoc_key = f\"{item['ref_doctype']}::{item['ref_name']}\"\n\t\tsig = f\"{doc_key}::{item['chunk_text'][:100].lower()}\"\n\t\tif sig in seen_sig:\n\t\t\tcontinue\n\t\tif per_doc.get(doc_key, 0) >= 2:\n\t\t\tcontinue\n\t\tseen_sig.add(sig)\n\t\tper_doc[doc_key] = per_doc.get(doc_key, 0) + 1\n\t\tresults.append(item)\n\t\tif len(results) >= top_k:\n\t\t\tbreak\n\n\treturn results",
-    "sortOrder": 5
+    "sortOrder": 5,
+    "kind": "logic"
   },
   {
     "id": 2006,
@@ -437,7 +458,8 @@ export const snippets = [
     "language": "python",
     "description": "Fonction de doki_light/actions/sales_order.py. Elle vérifie le DocType et le droit de création, puis insère une commande avec l'article et la quantité.",
     "code": "def execute(payload: dict) -> dict:\n\tif not frappe.db.exists(\"DocType\", \"Sales Order\"):\n\t\tfrappe.throw(_(\"Le DocType Sales Order n'est pas disponible\"))\n\tif not frappe.has_permission(\"Sales Order\", \"create\"):\n\t\tfrappe.throw(_(\"Permission insuffisante\"), frappe.PermissionError)\n\n\tcustomer = payload.get(\"customer\")\n\tif not customer:\n\t\tfrappe.throw(_(\"Client manquant\"))\n\n\tdoc = frappe.new_doc(\"Sales Order\")\n\tdoc.customer = customer\n\tif payload.get(\"item_code\"):\n\t\tdoc.append(\"items\", {\"item_code\": payload[\"item_code\"], \"qty\": float(payload.get(\"qty\") or 1)})\n\tdoc.insert()\n\treturn {\n\t\t\"doctype\": \"Sales Order\",\n\t\t\"name\": doc.name,\n\t\t\"route\": f\"/app/sales-order/{doc.name}\",\n\t\t\"message\": _(\"Commande {0} créée en brouillon\").format(doc.name),\n\t}",
-    "sortOrder": 6
+    "sortOrder": 6,
+    "kind": "logic"
   },
   {
     "id": 17,
@@ -448,7 +470,8 @@ export const snippets = [
     "language": "javascript",
     "description": "Fonctions entières du script Lichess. L'état est lu et écrit avec GM_getValue et GM_setValue. Le bouton affiche ON ou OFF.",
     "code": "        function toggleMisclickProtection() {\n            antiMisclickEnabled = !antiMisclickEnabled;\n            GM_setValue(\"antiMisclickEnabled\", antiMisclickEnabled);\n            updateButton();\n        }\n     \n        // Mise à jour du texte et couleur du bouton\n        function updateButton() {\n            const button = document.getElementById(\"toggleMisclickButton\");\n            if (!button) return;\n            button.innerText = antiMisclickEnabled ? \"🔴 Anti-Misclick ON\" : \"⚫ Anti-Misclick OFF\";\n            button.style.backgroundColor = antiMisclickEnabled ? \"#28a745\" : \"#dc3545\"; // Vert pour ON, Rouge pour OFF\n        }",
-    "sortOrder": 1
+    "sortOrder": 1,
+    "kind": "logic"
   },
   {
     "id": 18,
@@ -459,7 +482,8 @@ export const snippets = [
     "language": "javascript",
     "description": "Écouteur et fonctions entières du script Lichess. Un second clic avant 750 ms annule le geste. highlightSquare et resetSelection vont avec.",
     "code": "        // Écouteur de clics sur l'échiquier\n        document.addEventListener('click', (event) => {\n            if (!antiMisclickEnabled) return; // Si désactivé, ne fait rien\n     \n            const now = Date.now();\n            const square = event.target.closest('.square');\n     \n            if (!square) return;\n     \n            if (selectedSquare) {\n                if (now - lastClickTime < clickDelay) {\n                    console.log(\"⏳ Misclick détecté : mouvement annulé !\");\n                    resetSelection();\n                    return;\n                }\n                console.log(`✅ Coup validé : ${selectedSquare.dataset.san} -> ${square.dataset.san}`);\n                resetSelection();\n            } else {\n                selectedSquare = square;\n                lastClickTime = now;\n                highlightSquare(selectedSquare);\n                console.log(`🎯 Pièce sélectionnée sur ${square.dataset.san}`);\n            }\n        });\n     \n        // Mise en surbrillance de la case sélectionnée\n        function highlightSquare(square) {\n            square.style.backgroundColor = highlightColor;\n            setTimeout(() => {\n                if (square === selectedSquare) {\n                    square.style.backgroundColor = \"\";\n                }\n            }, clickDelay);\n        }\n     \n        // Réinitialisation de la sélection\n        function resetSelection() {\n            if (selectedSquare) {\n                selectedSquare.style.backgroundColor = \"\";\n            }\n            selectedSquare = null;\n        }",
-    "sortOrder": 2
+    "sortOrder": 2,
+    "kind": "logic"
   },
   {
     "id": 19,
@@ -470,7 +494,8 @@ export const snippets = [
     "language": "dart",
     "description": "Classe de lib/core/utils/food_classifier.dart. Le nom est normalisé, puis cherché en alias, en exact, au singulier, par mot, puis par règle de contenu.",
     "code": "class FoodClassifier {\n  FoodClassifier._();\n\n  /// Retourne l’id de catégorie, ou `null` si inconnu.\n  static String? classify(\n    String name, {\n    Map<String, String>? overrides,\n  }) {\n    try {\n      var key = FoodTaxonomy.normalize(name);\n      if (key.isEmpty) return null;\n\n      key = FoodTaxonomy.aliases[key] ?? key;\n\n      final override = overrides?[key] ?? overrides?[FoodTaxonomy.normalize(name)];\n      if (override != null && FoodTaxonomy.byId(override) != null) {\n        return override;\n      }\n\n      final exact = FoodTaxonomy.exactMap[key];\n      if (exact != null) return exact;\n\n      for (final candidate in _variants(key)) {\n        final hit = FoodTaxonomy.exactMap[candidate];\n        if (hit != null) return hit;\n        final alias = FoodTaxonomy.aliases[candidate];\n        if (alias != null) {\n          final viaAlias = FoodTaxonomy.exactMap[alias];\n          if (viaAlias != null) return viaAlias;\n        }\n      }\n\n      final tokens = key.split(' ').where((t) => t.length >= 2).toList();\n      for (final t in tokens.reversed) {\n        final byToken = FoodTaxonomy.tokenMap[t] ?? FoodTaxonomy.exactMap[t];\n        if (byToken != null) return byToken;\n        final aliasTok = FoodTaxonomy.aliases[t];\n        if (aliasTok != null) {\n          final via = FoodTaxonomy.exactMap[aliasTok] ?? FoodTaxonomy.tokenMap[aliasTok];\n          if (via != null) return via;\n        }\n      }\n\n      for (final rule in FoodTaxonomy.containsRules) {\n        if (key.contains(rule.$1)) return rule.$2;\n      }\n      return null;\n    } catch (e, stack) {\n      AppLogger.warning('FoodClassifier.classify(\"$name\")', e, stack);\n      return null;\n    }\n  }\n\n  /// Variantes singulier ↔ pluriel légères.\n  static Iterable<String> _variants(String key) sync* {\n    if (key.endsWith('s') && key.length > 3) {\n      yield key.substring(0, key.length - 1);\n    }\n    if (key.endsWith('es') && key.length > 4) {\n      yield key.substring(0, key.length - 2);\n    }\n    if (key.endsWith('x') && key.length > 3) {\n      yield key.substring(0, key.length - 1);\n    }\n    // Singulier → pluriel (pomme → pommes).\n    if (!key.endsWith('s') && key.length >= 3) {\n      yield '${key}s';\n      if (key.endsWith('eau')) yield '${key}x';\n      if (!key.endsWith('es')) yield '${key}es';\n    }\n  }\n\n  static FoodCategory? classifyCategory(\n    String name, {\n    Map<String, String>? overrides,\n  }) {\n    return FoodTaxonomy.byId(classify(name, overrides: overrides));\n  }\n\n  /// Id effectif : persisté, sinon classif à la volée.\n  static String? effectiveCategoryId(\n    String name,\n    String? storedId, {\n    Map<String, String>? overrides,\n  }) {\n    if (storedId != null && FoodTaxonomy.byId(storedId) != null) return storedId;\n    return classify(name, overrides: overrides);\n  }\n\n  static List<FoodCategory> suggestAlternatives(\n    String name, {\n    String? primaryId,\n    int limit = 3,\n    Map<String, String>? overrides,\n  }) {\n    try {\n      final key = FoodTaxonomy.normalize(name);\n      if (key.isEmpty) return const [];\n      final scored = <FoodCategory, int>{};\n      for (final rule in FoodTaxonomy.containsRules) {\n        if (!key.contains(rule.$1)) continue;\n        final cat = FoodTaxonomy.byId(rule.$2);\n        if (cat == null || cat.id == primaryId) continue;\n        scored[cat] = (scored[cat] ?? 0) + rule.$1.length;\n      }\n      final list = scored.entries.toList()\n        ..sort((a, b) => b.value.compareTo(a.value));\n      return list.take(limit).map((e) => e.key).toList();\n    } catch (e, stack) {\n      AppLogger.warning('FoodClassifier.suggestAlternatives', e, stack);\n      return const [];\n    }\n  }\n}",
-    "sortOrder": 1
+    "sortOrder": 1,
+    "kind": "logic"
   },
   {
     "id": 20,
@@ -481,7 +506,8 @@ export const snippets = [
     "language": "dart",
     "description": "Classe de lib/utils/roll_d6.dart. roll tire un entier de 1 à 6. rollMultiple répète ce tirage.",
     "code": "class RollD6 {\n  RollD6._();\n\n  static final Random _fallback = Random();\n\n  /// Retourne un entier entre 1 et 6 (inclus).\n  static int roll() {\n    try {\n      final secure = Random.secure();\n      return secure.nextInt(6) + 1;\n    } catch (_) {\n      // Fallback: mélanger avec le temps pour varier\n      final t = DateTime.now().microsecondsSinceEpoch;\n      final r = Random(t ^ _fallback.nextInt(0x7FFFFFFF));\n      return r.nextInt(6) + 1;\n    }\n  }\n\n  /// Retourne [n] tirages D6.\n  static List<int> rollMultiple(int n) {\n    if (n <= 0) return [];\n    final list = <int>[];\n    for (var i = 0; i < n; i++) {\n      list.add(roll());\n    }\n    return list;\n  }\n}",
-    "sortOrder": 1
+    "sortOrder": 1,
+    "kind": "logic"
   },
   {
     "id": 21,
@@ -492,7 +518,8 @@ export const snippets = [
     "language": "dart",
     "description": "Méthode de lib/services/voice_mood_analyzer.dart. Sans échantillons suffisants, le résultat externe est gardé. Sinon l'émotion locale est renforcée, puis l'intensité est pondérée.",
     "code": "  static MoodAnalysisResult mergeWithApi(\n    MoodAnalysisResult? api,\n    List<Amplitude> samples,\n    int durationSeconds,\n  ) {\n    final profile = VoiceSignalProfile.fromSamples(samples, durationSeconds);\n    final local = _resultFromProfile(profile);\n\n    if (api == null) {\n      return local;\n    }\n    if (samples.length < 6) {\n      return api;\n    }\n\n    final scores = _baseScores(profile, durationSeconds);\n    _applyConsistencyGates(profile, scores);\n    scores[api.emotion] = (scores[api.emotion] ?? 0) + 1.6;\n\n    var bestE = local.emotion;\n    var bestS = -1.0;\n    scores.forEach((e, s) {\n      if (s > bestS) {\n        bestS = s;\n        bestE = e;\n      }\n    });\n\n    const wApi = 0.35;\n    const wLoc = 0.65;\n    final intensity = ((api.intensity * wApi) + (local.intensity * wLoc)).round().clamp(1, 10);\n    final energy = ((api.energy * wApi) + (local.energy * wLoc)).round().clamp(1, 10);\n\n    return MoodAnalysisResult(\n      emotion: Emotions.normalize(bestE),\n      intensity: intensity,\n      energy: energy,\n    );\n  }",
-    "sortOrder": 1
+    "sortOrder": 1,
+    "kind": "logic"
   },
   {
     "id": 22,
@@ -503,7 +530,8 @@ export const snippets = [
     "language": "dart",
     "description": "Méthode de lib/core/models/chord_parser.dart. Elle reconnaît un silence, un tacet ou un N.C. pour ne pas le traiter comme un accord.",
     "code": "  static bool isNoChordSymbol(String chordString) {\n    final s = chordString.trim();\n    if (s.isEmpty) return false;\n    if (s == '-' || s == '—' || s == '\\u2014') return true;\n    // Pas d’accord, silence, tacet, ensemble vide (∅ — pas « ø » demi-diminué)\n    if (s == '\\u2205') return true;\n    final lower = s.toLowerCase();\n    if (RegExp(\n          r'^n\\.?\\s*c\\.?$',\n          caseSensitive: false,\n        ).hasMatch(s)) {\n      return true;\n    }\n    if (RegExp(\n          r'^(tacet|silence|repos|vide|rest|empty)$',\n          caseSensitive: false,\n        ).hasMatch(lower)) {\n      return true;\n    }\n    // Silences courts (notation texte pratique dans les grilles)\n    if (RegExp(r'^(qr|hr|wr)$', caseSensitive: false).hasMatch(lower)) {\n      return true;\n    }\n    // Symboles de silence Unicode (SMuFL / notation musicale, si la police les affiche)\n    const restCodePoints = <int>[0x1D13B, 0x1D13C, 0x1D13D, 0x1D13E];\n    final runes = s.runes.toList();\n    if (runes.length == 1 && restCodePoints.contains(runes.first)) {\n      return true;\n    }\n    return false;\n  }",
-    "sortOrder": 1
+    "sortOrder": 1,
+    "kind": "logic"
   },
   {
     "id": 23,
@@ -514,7 +542,8 @@ export const snippets = [
     "language": "dart",
     "description": "Classe de lib/models/eleve.dart. Le constructeur pose le profil. niveauEffectif convertit la moyenne sur 20 en note de 0 à 5, sinon il reprend le niveau saisi.",
     "code": "class Eleve {\n  Eleve({\n    this.prenom = '',\n    this.nom = '',\n    this.participe = false,\n    this.volontaire = false,\n    this.genre,\n    this.niveau,\n    this.moyenne,\n    this.comportement,\n    this.preferSolo = false,\n    this.dyslexie = false,\n    this.avs = false,\n    this.langueSpeciale = '',\n    this.annotation = '',\n    int? id,\n  }) : id = id ?? _nextId++;\n\n  static int _nextId = 1;\n\n  /// Remonte le compteur d’ids après restauration.\n  static void bumpNextId(int atLeast) {\n    if (atLeast > _nextId) _nextId = atLeast;\n  }\n\n  /// Identifiant stable (clés Flutter).\n  final int id;\n\n  String prenom;\n  String nom;\n  bool participe;\n  bool volontaire;\n\n  /// Voir [Genre] : F, M, A, N, ou null.\n  String? genre;\n\n  /// Niveau pédagogique 1 (fragile) → 5 (très à l’aise), ou null.\n  int? niveau;\n\n  /// Moyenne /20 si connue (Pronote, École Directe, saisie manuelle).\n  double? moyenne;\n\n  /// Comportement 1 (difficile) → 5 (exemplaire), ou null.\n  int? comportement;\n\n  /// Préfère travailler seul / en petit groupe.\n  bool preferSolo;\n\n  bool dyslexie;\n  bool avs;\n  String langueSpeciale;\n  String annotation;\n\n  /// Niveau effectif pour l’algo : moyenne/4, sinon niveau, sinon null.\n  double? get niveauEffectif {\n    if (moyenne != null) return (moyenne!.clamp(0, 20)) / 4.0; // 0–5\n    if (niveau != null) return niveau!.clamp(1, 5).toDouble();\n    return null;\n  }\n\n  bool get aProfilRenseigne =>\n      niveau != null ||\n      moyenne != null ||\n      comportement != null ||\n      preferSolo ||\n      dyslexie ||\n      avs ||\n      langueSpeciale.trim().isNotEmpty ||\n      annotation.trim().isNotEmpty;\n\n  Eleve copyWith({\n    String? prenom,\n    String? nom,\n    bool? participe,\n    bool? volontaire,\n    String? genre,\n    bool clearGenre = false,\n    int? niveau,\n    bool clearNiveau = false,\n    double? moyenne,\n    bool clearMoyenne = false,\n    int? comportement,\n    bool clearComportement = false,\n    bool? preferSolo,\n    bool? dyslexie,\n    bool? avs,\n    String? langueSpeciale,\n    String? annotation,\n  }) {\n    return Eleve(\n      id: id,\n      prenom: prenom ?? this.prenom,\n      nom: nom ?? this.nom,\n      participe: participe ?? this.participe,\n      volontaire: volontaire ?? this.volontaire,\n      genre: clearGenre ? null : (genre ?? this.genre),\n      niveau: clearNiveau ? null : (niveau ?? this.niveau),\n      moyenne: clearMoyenne ? null : (moyenne ?? this.moyenne),\n      comportement:\n          clearComportement ? null : (comportement ?? this.comportement),\n      preferSolo: preferSolo ?? this.preferSolo,\n      dyslexie: dyslexie ?? this.dyslexie,\n      avs: avs ?? this.avs,\n      langueSpeciale: langueSpeciale ?? this.langueSpeciale,\n      annotation: annotation ?? this.annotation,\n    );\n  }\n\n  /// Nom affiché (prénom + nom). Vide si les deux sont vides.\n  String get displayName {\n    final p = prenom.trim();\n    final n = nom.trim();\n    if (p.isEmpty && n.isEmpty) return '';\n    if (p.isEmpty) return n;\n    if (n.isEmpty) return p;\n    return '$p $n';\n  }\n\n  /// Libellé toujours non vide pour l'affichage / tirage.\n  String labelAt(int index) {\n    final d = displayName;\n    return d.isEmpty ? 'Élève ${index + 1}' : d;\n  }\n\n  bool get isDefaultPlaceholder {\n    final p = prenom.trim();\n    final n = nom.trim();\n    if (p.isNotEmpty) return false;\n    if (n.isEmpty) return true;\n    return RegExp(r'^Élève \\d+$').hasMatch(n) || n == 'Nouvel élève';\n  }\n\n  static bool isNomDefaut(String nom) {\n    final n = nom.trim();\n    return n.isNotEmpty && RegExp(r'^Élève \\d+$').hasMatch(n);\n  }\n}",
-    "sortOrder": 1
+    "sortOrder": 1,
+    "kind": "model"
   },
   {
     "id": 24,
@@ -525,7 +554,8 @@ export const snippets = [
     "language": "dart",
     "description": "Méthode entière de lib/services/team_drawer.dart. Chaque essai relance draw(). Le coût additionne les violations et l'équilibre des équipes. Le meilleur tirage est renvoyé.",
     "code": "  TeamDrawResult drawBestOf({\n    required List<Eleve> eleves,\n    required List<int> participantIndices,\n    required TeamDrawOptions options,\n    required List<String> nomsEquipes,\n    int essais = 6,\n  }) {\n    final n = essais.clamp(1, 48);\n    TeamDrawResult? best;\n    var bestCost = 1 << 30;\n    for (var e = 0; e < n; e++) {\n      final drawer = TeamDrawer(Random(_random.nextInt(1 << 30)));\n      final r = drawer.draw(\n        eleves: eleves,\n        participantIndices: participantIndices,\n        options: options,\n        nomsEquipes: nomsEquipes,\n      );\n      final cost = r.violations * 10000 +\n          _coutGlobalEquipes(r.equipesIndices, eleves, options);\n      if (best == null || cost < bestCost) {\n        best = r;\n        bestCost = cost;\n      }\n    }\n    return best!;\n  }",
-    "sortOrder": 2
+    "sortOrder": 2,
+    "kind": "logic"
   },
   {
     "id": 1001,
@@ -536,7 +566,8 @@ export const snippets = [
     "language": "java",
     "description": "Méthode de AppointmentService.java. Elle refuse un créneau déjà pris dans l'heure, hors rendez-vous annulés, puis enregistre le rendez-vous en attente.",
     "code": "    @Transactional\n    public Appointment createAppointment(Long userId, Appointment.ServiceType serviceType,\n                                        LocalDateTime scheduledAt, Double price) {\n        User user = userRepository.findById(userId)\n                .orElseThrow(() -> new RuntimeException(\"User not found\"));\n        \n        // Vérifier qu'il n'y a pas de conflit (vérifier les créneaux de 1h avant et après)\n        List<Appointment> existing = appointmentRepository.findByScheduledAtBetween(\n            scheduledAt.minusHours(1), scheduledAt.plusHours(1));\n        // Filtrer pour exclure les rendez-vous annulés\n        boolean hasConflict = existing.stream()\n            .anyMatch(apt -> apt.getStatus() != Appointment.AppointmentStatus.CANCELLED);\n        if (hasConflict) {\n            throw new RuntimeException(\"Un rendez-vous existe déjà à cet horaire\");\n        }\n        \n        Appointment appointment = new Appointment();\n        appointment.setUser(user);\n        appointment.setServiceType(serviceType);\n        appointment.setScheduledAt(scheduledAt);\n        appointment.setPrice(price);\n        appointment.setStatus(Appointment.AppointmentStatus.PENDING);\n        appointment.setPaymentStatus(Appointment.PaymentStatus.PENDING);\n        \n        Appointment saved = appointmentRepository.save(appointment);\n        \n        // Envoyer un email de confirmation\n        try {\n            emailService.sendAppointmentConfirmation(\n                user.getEmail(),\n                scheduledAt.toString(),\n                serviceType.toString()\n            );\n        } catch (Exception e) {\n            // Log l'erreur mais ne bloque pas la création\n            System.err.println(\"Erreur lors de l'envoi de l'email: \" + e.getMessage());\n        }\n        \n        return saved;\n    }",
-    "sortOrder": 1
+    "sortOrder": 1,
+    "kind": "logic"
   },
   {
     "id": 1002,
@@ -547,7 +578,8 @@ export const snippets = [
     "language": "java",
     "description": "SecurityFilterChain : désactivation CSRF, session stateless, routes /api/auth/** et /api/public/** en permitAll, /api/admin/** réservé ADMIN, filtre JWT.",
     "code": "    @Bean\n    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {\n        http\n            .csrf(csrf -> csrf.disable())\n            .cors(cors -> cors.configurationSource(corsConfigurationSource()))\n            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))\n            .authorizeHttpRequests(auth -> auth\n                .requestMatchers(\"/api/auth/**\", \"/api/public/**\").permitAll()\n                .requestMatchers(\"/api/admin/**\").hasRole(\"ADMIN\")\n                .anyRequest().authenticated()\n            )\n            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);\n        \n        return http.build();\n    }",
-    "sortOrder": 2
+    "sortOrder": 2,
+    "kind": "security"
   },
   {
     "id": 1003,
@@ -558,7 +590,8 @@ export const snippets = [
     "language": "java",
     "description": "Méthodes de AuthController.java. L'inscription refuse un email déjà pris, encode le mot de passe, enregistre le fuseau, puis renvoie un JWT. Le login authentifie et renvoie un JWT.",
     "code": "    @PostMapping(\"/register\")\n    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {\n        if (userRepository.existsByEmail(request.getEmail())) {\n            return ResponseEntity.badRequest().body(\"Email already exists\");\n        }\n        \n        User user = new User();\n        user.setEmail(request.getEmail());\n        user.setPassword(passwordEncoder.encode(request.getPassword()));\n        user.setFirstName(request.getFirstName());\n        user.setLastName(request.getLastName());\n        user.setLanguage(request.getLanguage() != null ? request.getLanguage() : User.Language.FR);\n        user.setTimezone(request.getTimezone());\n        \n        userRepository.save(user);\n        \n        Authentication authentication = authenticationManager.authenticate(\n                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));\n        \n        String token = tokenProvider.generateToken(authentication);\n        \n        return ResponseEntity.ok(new AuthResponse(token, \"User registered successfully\"));\n    }\n    \n    @PostMapping(\"/login\")\n    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {\n        Authentication authentication = authenticationManager.authenticate(\n                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));\n        \n        String token = tokenProvider.generateToken(authentication);\n        \n        return ResponseEntity.ok(new AuthResponse(token, \"Login successful\"));\n    }",
-    "sortOrder": 3
+    "sortOrder": 3,
+    "kind": "security"
   },
   {
     "id": 1004,
@@ -569,7 +602,8 @@ export const snippets = [
     "language": "java",
     "description": "Génération de token JWT (subject = email, expiration configurable), parsing et validation avec clé HMAC (app.jwt.secret).",
     "code": "    public String generateToken(Authentication authentication) {\n        String email = authentication.getName();\n        Date now = new Date();\n        Date expiryDate = new Date(now.getTime() + jwtExpiration);\n        \n        return Jwts.builder()\n                .subject(email)\n                .issuedAt(now)\n                .expiration(expiryDate)\n                .signWith(getSigningKey())\n                .compact();\n    }\n    \n    public String getEmailFromToken(String token) {\n        Claims claims = Jwts.parser()\n                .verifyWith(getSigningKey())\n                .build()\n                .parseSignedClaims(token)\n                .getPayload();\n        \n        return claims.getSubject();\n    }\n    \n    public boolean validateToken(String token) {\n        try {\n            Jwts.parser()\n                    .verifyWith(getSigningKey())\n                    .build()\n                    .parseSignedClaims(token);\n            return true;\n        } catch (JwtException | IllegalArgumentException e) {\n            return false;\n        }\n    }",
-    "sortOrder": 4
+    "sortOrder": 4,
+    "kind": "security"
   },
   {
     "id": 1005,
@@ -580,7 +614,8 @@ export const snippets = [
     "language": "java",
     "description": "Méthodes de AppointmentService.java. L'annulation vérifie que le rendez-vous appartient à l'utilisateur. La confirmation passe le statut à CONFIRMED.",
     "code": "    @Transactional\n    public Appointment cancelAppointment(Long id, Long userId) {\n        Appointment appointment = appointmentRepository.findById(id)\n                .orElseThrow(() -> new RuntimeException(\"Appointment not found\"));\n        \n        if (!appointment.getUser().getId().equals(userId)) {\n            throw new RuntimeException(\"Unauthorized\");\n        }\n        \n        appointment.setStatus(Appointment.AppointmentStatus.CANCELLED);\n        return appointmentRepository.save(appointment);\n    }\n    \n    @Transactional\n    public Appointment confirmAppointment(Long id) {\n        Appointment appointment = appointmentRepository.findById(id)\n                .orElseThrow(() -> new RuntimeException(\"Appointment not found\"));\n        \n        appointment.setStatus(Appointment.AppointmentStatus.CONFIRMED);\n        return appointmentRepository.save(appointment);\n    }",
-    "sortOrder": 5
+    "sortOrder": 5,
+    "kind": "logic"
   },
   {
     "id": 1006,
@@ -591,7 +626,8 @@ export const snippets = [
     "language": "java",
     "description": "Méthodes de StripeController.java. Le paiement délègue au service et renvoie son résultat. L'abonnement lit le clientSecret sur la dernière facture.",
     "code": "    @PostMapping(\"/create-payment-intent\")\n    public ResponseEntity<?> createPaymentIntent(@RequestBody PaymentRequest request) {\n        try {\n            Map<String, String> response = stripeService.createPaymentIntent(\n                request.getAmount(),\n                request.getCurrency() != null ? request.getCurrency() : \"eur\",\n                request.getDescription()\n            );\n            return ResponseEntity.ok(response);\n        } catch (StripeException e) {\n            Map<String, String> error = new HashMap<>();\n            error.put(\"error\", e.getMessage());\n            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);\n        } catch (Exception e) {\n            Map<String, String> error = new HashMap<>();\n            error.put(\"error\", \"Erreur lors de la création du paiement\");\n            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);\n        }\n    }\n    \n    @PostMapping(\"/create-subscription\")\n    public ResponseEntity<?> createSubscription(@RequestBody SubscriptionRequest request) {\n        try {\n            Subscription subscription = stripeService.createSubscription(\n                request.getCustomerId(),\n                request.getPriceId()\n            );\n            Map<String, String> response = new HashMap<>();\n            response.put(\"subscriptionId\", subscription.getId());\n            String clientSecret = null;\n            if (subscription.getLatestInvoiceObject() != null\n                    && subscription.getLatestInvoiceObject().getPaymentIntentObject() != null) {\n                clientSecret = subscription.getLatestInvoiceObject()\n                        .getPaymentIntentObject()\n                        .getClientSecret();\n            }\n            if (clientSecret != null) {\n                response.put(\"clientSecret\", clientSecret);\n            }\n            return ResponseEntity.ok(response);\n        } catch (StripeException e) {\n            Map<String, String> error = new HashMap<>();\n            error.put(\"error\", e.getMessage());\n            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);\n        } catch (Exception e) {\n            Map<String, String> error = new HashMap<>();\n            error.put(\"error\", \"Erreur lors de la création de l'abonnement\");\n            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);\n        }\n    }",
-    "sortOrder": 6
+    "sortOrder": 6,
+    "kind": "api"
   },
   {
     "id": 1007,
@@ -602,7 +638,8 @@ export const snippets = [
     "language": "java",
     "description": "Entité JPA rendez-vous : relation ManyToOne User, ServiceType (CONSULTATION, HYPNOSIS, COACHING), statuts (PENDING, CONFIRMED…), Stripe paymentIntentId, @CreatedDate / @LastModifiedDate.",
     "code": "@Entity\n@Table(name = \"appointments\")\n@Data\n@NoArgsConstructor\n@AllArgsConstructor\n@EntityListeners(AuditingEntityListener.class)\npublic class Appointment {\n    \n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n    \n    @ManyToOne(fetch = FetchType.LAZY)\n    @JoinColumn(name = \"user_id\", nullable = false)\n    private User user;\n    \n    @Enumerated(EnumType.STRING)\n    private ServiceType serviceType;\n    \n    private LocalDateTime scheduledAt;\n    \n    @Enumerated(EnumType.STRING)\n    private AppointmentStatus status = AppointmentStatus.PENDING;\n    \n    private String videoLink; // Zoom ou WebRTC\n    \n    private String notes;\n    \n    private Double price;\n    \n    @Enumerated(EnumType.STRING)\n    private PaymentStatus paymentStatus = PaymentStatus.PENDING;\n    \n    private String paymentIntentId; // Stripe\n    \n    @CreatedDate\n    @Column(nullable = false, updatable = false)\n    private LocalDateTime createdAt;\n    \n    @LastModifiedDate\n    private LocalDateTime updatedAt;\n    \n    public enum ServiceType {\n        CONSULTATION, HYPNOSIS, COACHING, FOLLOW_UP\n    }\n    \n    public enum AppointmentStatus {\n        PENDING, CONFIRMED, COMPLETED, CANCELLED\n    }\n    \n    public enum PaymentStatus {\n        PENDING, PAID, FAILED, REFUNDED\n    }\n}",
-    "sortOrder": 7
+    "sortOrder": 7,
+    "kind": "model"
   },
   {
     "id": 1008,
@@ -613,7 +650,8 @@ export const snippets = [
     "language": "java",
     "description": "@RestControllerAdvice : MethodArgumentNotValidException (champs en erreur), BadCredentialsException (401), RuntimeException et Exception générique. Réponses JSON structurées.",
     "code": "    @ExceptionHandler(MethodArgumentNotValidException.class)\n    public ResponseEntity<Map<String, Object>> handleValidationExceptions(\n            MethodArgumentNotValidException ex) {\n        Map<String, String> errors = new HashMap<>();\n        ex.getBindingResult().getAllErrors().forEach((error) -> {\n            String fieldName = ((FieldError) error).getField();\n            String errorMessage = error.getDefaultMessage();\n            errors.put(fieldName, errorMessage);\n        });\n        \n        Map<String, Object> response = new HashMap<>();\n        response.put(\"error\", \"Validation failed\");\n        response.put(\"errors\", errors);\n        response.put(\"status\", HttpStatus.BAD_REQUEST.value());\n        \n        return ResponseEntity.badRequest().body(response);\n    }\n    \n    @ExceptionHandler(BadCredentialsException.class)\n    public ResponseEntity<Map<String, Object>> handleBadCredentials(BadCredentialsException ex) {\n        Map<String, Object> response = new HashMap<>();\n        response.put(\"error\", \"Invalid email or password\");\n        response.put(\"status\", HttpStatus.UNAUTHORIZED.value());\n        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);\n    }\n    \n    @ExceptionHandler(RuntimeException.class)\n    public ResponseEntity<Map<String, Object>> handleRuntimeException(RuntimeException ex) {\n        Map<String, Object> response = new HashMap<>();\n        response.put(\"error\", ex.getMessage());\n        response.put(\"status\", HttpStatus.BAD_REQUEST.value());\n        return ResponseEntity.badRequest().body(response);\n    }\n    \n    @ExceptionHandler(Exception.class)\n    public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {\n        Map<String, Object> response = new HashMap<>();\n        response.put(\"error\", \"An unexpected error occurred\");\n        response.put(\"message\", ex.getMessage());\n        response.put(\"status\", HttpStatus.INTERNAL_SERVER_ERROR.value());\n        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);\n    }",
-    "sortOrder": 8
+    "sortOrder": 8,
+    "kind": "validation"
   },
   {
     "id": 1009,
@@ -624,7 +662,8 @@ export const snippets = [
     "language": "javascript",
     "description": "Extrait de frontend/src/services/api.js. Le client ajoute le JWT, et un 401 déconnecte. Les modules auth et rendez-vous appellent les routes correspondantes.",
     "code": "const api = axios.create({\n  baseURL: API_URL,\n  headers: {\n    'Content-Type': 'application/json',\n  },\n})\n\n// Intercepteur pour ajouter le token\napi.interceptors.request.use(\n  (config) => {\n    const token = useAuthStore.getState().token\n    if (token) {\n      config.headers.Authorization = `Bearer ${token}`\n    }\n    return config\n  },\n  (error) => {\n    return Promise.reject(error)\n  }\n)\n\n// Intercepteur pour gérer les erreurs\napi.interceptors.response.use(\n  (response) => response,\n  (error) => {\n    if (error.response?.status === 401) {\n      useAuthStore.getState().logout()\n      window.location.href = '/login'\n    }\n    return Promise.reject(error)\n  }\n)\n\n// Auth API\nexport const authAPI = {\n  login: (data) => api.post('/auth/login', data),\n  register: (data) => api.post('/auth/register', data),\n}\n\n// User API\nexport const userAPI = {\n  getProfile: () => api.get('/user/profile'),\n  updateProfile: (data) => api.put('/user/profile', data),\n  changePassword: (data) => api.put('/user/password', data),\n}\n\n// Appointments API\nexport const appointmentsAPI = {\n  getAll: () => api.get('/appointments'),\n  getById: (id) => api.get(`/appointments/${id}`),\n  create: (data) => api.post('/appointments', data),\n  cancel: (id) => api.put(`/appointments/${id}/cancel`),\n}",
-    "sortOrder": 9
+    "sortOrder": 9,
+    "kind": "api"
   },
   {
     "id": 1010,
@@ -635,7 +674,8 @@ export const snippets = [
     "language": "java",
     "description": "Méthode de StripeService.java. Le montant est converti en centimes, la devise vaut eur si elle est absente, puis Stripe renvoie le clientSecret.",
     "code": "    public Map<String, String> createPaymentIntent(Double amount, String currency, String description) throws StripeException {\n        PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()\n                .setAmount((long) (amount * 100)) // Convertir en centimes\n                .setCurrency(currency != null ? currency : \"eur\")\n                .setDescription(description)\n                .setAutomaticPaymentMethods(\n                        PaymentIntentCreateParams.AutomaticPaymentMethods.builder()\n                                .setEnabled(true)\n                                .build()\n                )\n                .build();\n        \n        PaymentIntent paymentIntent = PaymentIntent.create(params);\n        \n        Map<String, String> response = new HashMap<>();\n        response.put(\"clientSecret\", paymentIntent.getClientSecret());\n        response.put(\"paymentIntentId\", paymentIntent.getId());\n        return response;\n    }",
-    "sortOrder": 10
+    "sortOrder": 10,
+    "kind": "logic"
   },
   {
     "id": 3010,
@@ -646,7 +686,8 @@ export const snippets = [
     "language": "dart",
     "description": "Méthode de lib/core/utils/quick_add_parser.dart. Les mots « liste » et « ajouter » sont testés du plus long au plus court. Sans séparateur, le premier mot devient le nom de liste.",
     "code": "  static QuickAddResult parse(\n    String input, {\n    String? listKeyword,\n    String? addKeyword,\n  }) {\n    String s = input.trim();\n    if (s.isEmpty) return const QuickAddResult(items: []);\n\n    s = _normalizeSpaces(s);\n\n    final listKeywords = <String>[\n      if (listKeyword != null && listKeyword.trim().isNotEmpty) listKeyword.trim(),\n      ...builtInListKeywords,\n    ];\n    listKeywords.sort((a, b) => b.length.compareTo(a.length));\n\n    final addKeywords = <String>[\n      if (addKeyword != null && addKeyword.trim().isNotEmpty) addKeyword.trim(),\n      ...builtInAddKeywords,\n    ];\n    addKeywords.sort((a, b) => b.length.compareTo(a.length));\n\n    for (final kw in listKeywords) {\n      final prefixLen = _prefixLength(s, kw);\n      if (prefixLen == null) continue;\n      var afterListe = s.substring(prefixLen).trim();\n      if (afterListe.isEmpty) return const QuickAddResult(items: []);\n\n      final ajouterIdx = _indexOfAnyWord(afterListe, addKeywords);\n      final colonIdx = _indexOfItemColon(afterListe);\n      final sep = _findSeparator(ajouterIdx, colonIdx, afterListe, addKeywords);\n\n      if (sep != null) {\n        final listName = afterListe.substring(0, sep.start).trim();\n        final itemsStr = afterListe.substring(sep.end).trim();\n        if (listName.isEmpty) return _itemsOnly(itemsStr);\n        return QuickAddResult(\n          listName: capitalizePhraseSafely(listName),\n          items: _splitItems(itemsStr),\n        );\n      }\n\n      final firstSpace = afterListe.indexOf(' ');\n      if (firstSpace > 0) {\n        final possibleListName = afterListe.substring(0, firstSpace).trim();\n        final rest = afterListe.substring(firstSpace).trim();\n        if (rest.isNotEmpty) {\n          return QuickAddResult(\n            listName: capitalizePhraseSafely(possibleListName),\n            items: _splitItems(rest, splitSpacesIfNoComma: !stringUsesUncasedScript(rest)),\n          );\n        }\n      }\n      return const QuickAddResult(items: []);\n    }\n\n    for (final add in addKeywords) {\n      final prefixLen = _prefixLength(s, add);\n      if (prefixLen == null) continue;\n      final rest = s.substring(prefixLen).trim();\n      return _itemsOnly(rest);\n    }\n\n    return _itemsOnly(s);\n  }",
-    "sortOrder": 2
+    "sortOrder": 2,
+    "kind": "logic"
   },
   {
     "id": 3011,
@@ -657,7 +698,8 @@ export const snippets = [
     "language": "dart",
     "description": "Méthode de lib/widgets/dice_roller.dart. Le total ajoute le bonus. La réussite compare ce total au seuil. Un triple 1, 6, ou autre est distingué.",
     "code": "  Future<void> _rollDice() async {\n    if (_isRolling) return;\n\n    setState(() {\n      _isRolling = true;\n      _lastRoll = null;\n    });\n\n    _diceAnimationController.forward(from: 0);\n    final timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {\n      if (mounted) {\n        setState(() {\n          _rollingDice = List.generate(_numDice, (_) => RollD6.roll());\n        });\n      }\n    });\n\n    await Future.delayed(const Duration(milliseconds: 800));\n    timer.cancel();\n\n    List<int> rolled = List.generate(_numDice, (_) => RollD6.roll());\n    if (_numDice == 3 && mounted) {\n      final characterType = context.read<CharacterProvider>().currentCharacter?.type;\n      final rnd = Random().nextDouble();\n      if (characterType == 'Ange' || characterType == 'Humain') {\n        if (rnd < 0.005) rolled = [1, 1, 1];\n      } else if (characterType == 'Démon') {\n        if (rnd < 0.005) rolled = [6, 6, 6];\n      }\n    }\n    final total = rolled.reduce((a, b) => a + b) + _bonus;\n    final threshold = _selectedCharacteristic * _numDice;\n    final isTriple = _numDice == 3 && rolled[0] == rolled[1] && rolled[1] == rolled[2];\n    final isTriple1 = isTriple && rolled[0] == 1;\n    final isTriple6 = isTriple && rolled[0] == 6;\n    final isOtherTriple = isTriple && rolled[0] != 1 && rolled[0] != 6;\n\n    setState(() {\n      _lastRoll = rolled;\n      _total = total;\n      _isSuccess = total <= threshold;\n      _isTriple1 = isTriple1;\n      _isTriple6 = isTriple6;\n      _isOtherTriple = isOtherTriple;\n      _otherTripleValue = isOtherTriple ? rolled[0] : null;\n      _isRolling = false;\n      _rollingDice = rolled;\n    });\n\n    _diceAnimationController.reverse();\n  }",
-    "sortOrder": 2
+    "sortOrder": 2,
+    "kind": "logic"
   },
   {
     "id": 3012,
@@ -668,7 +710,8 @@ export const snippets = [
     "language": "dart",
     "description": "Extrait de lib/services/voice_mood_analyzer.dart. Sans fichier wav, seul le signal d'amplitude est utilisé. Une erreur du modèle renvoie cette analyse.",
     "code": "  static Future<MoodAnalysisResult> analyzeHybrid({\n    required String? wavPath,\n    required List<Amplitude> samples,\n    required int durationSeconds,\n  }) async {\n    final ampOnly = mergeWithApi(null, samples, durationSeconds);\n    if (wavPath == null || !wavPath.toLowerCase().endsWith('.wav')) {\n      return ampOnly;\n    }\n    try {\n      final ser = await SerEmotionTflite.instance.classify(wavPath);\n      if (ser == null) return ampOnly;\n      return _fuseSerWithAmplitude(ser, ampOnly, samples, durationSeconds);\n    } catch (_) {\n      return ampOnly;\n    }\n  }",
-    "sortOrder": 2
+    "sortOrder": 2,
+    "kind": "logic"
   },
   {
     "id": 3013,
@@ -679,7 +722,8 @@ export const snippets = [
     "language": "dart",
     "description": "Méthode entière de lib/services/team_drawer.dart. Binômes, placement, incompatibilités, effectifs, échanges, puis le résultat renvoyé.",
     "code": "  TeamDrawResult draw({\n    required List<Eleve> eleves,\n    required List<int> participantIndices,\n    required TeamDrawOptions options,\n    required List<String> nomsEquipes,\n  }) {\n    final nbEquipes = options.nbEquipes;\n    if (nbEquipes < 1 || participantIndices.isEmpty) {\n      return TeamDrawResult(\n        equipesIndices: List.generate(nbEquipes, (_) => <int>[]),\n        equipesNoms: List.generate(nbEquipes, (_) => <String>[]),\n        nomsEquipes: List<String>.from(nomsEquipes),\n      );\n    }\n\n    final equipes = List.generate(nbEquipes, (_) => <int>[]);\n    final assigne = <int>{};\n    var violations = 0;\n\n    // ── 1. Binômes / chaînes ♥ d’abord ───────────────────────────────────\n    violations += _placerCoeurs(\n      eleves: eleves,\n      participantIndices: participantIndices,\n      equipes: equipes,\n      assigne: assigne,\n      options: options,\n    );\n\n    // ── 2. Reste : ordre priorisé puis scoring multi-critères ────────────\n    final restants = [\n      for (final i in participantIndices)\n        if (!assigne.contains(i)) i,\n    ];\n    _ordonnerPlacement(restants, eleves, options);\n\n    for (final idx in restants) {\n      final placed = _placerOptimal(\n        idx,\n        equipes,\n        eleves,\n        options,\n        hardOnly: false,\n      );\n      if (placed.violation) violations++;\n      assigne.add(idx);\n    }\n\n    // ── 3. Réparer ✕ durs ────────────────────────────────────────────────\n    violations += _corrigerIncompatibles(equipes, options, eleves);\n\n    // ── 4. Effectifs |max−min| ≤ 1 ───────────────────────────────────────\n    _equilibrerTailles(equipes, eleves, options);\n\n    // ── 5. Raffinement local (échanges qui améliorent le score) ──────────\n    _raffiner(equipes, eleves, options);\n\n    // Comptage final des violations dures restantes.\n    violations = _compterViolationsDures(equipes, options, eleves);\n\n    final equipesNoms = [\n      for (final team in equipes)\n        [for (final i in team) eleves[i].labelAt(i)],\n    ];\n\n    return TeamDrawResult(\n      equipesIndices: equipes,\n      equipesNoms: equipesNoms,\n      nomsEquipes: List<String>.from(nomsEquipes),\n      violations: violations,\n    );\n  }",
-    "sortOrder": 3
+    "sortOrder": 3,
+    "kind": "logic"
   },
   {
     "id": 3014,
@@ -690,7 +734,8 @@ export const snippets = [
     "language": "dart",
     "description": "Méthodes de jam_musical_transport.dart. progressAt avance depuis l'ancre. applyClockSample lisse le décalage d'horloge. applyDriftCorrection recale si l'écart est grand.",
     "code": "  double progressAt(DateTime utc) {\n    if (!isPlaying || anchorUtc == null) {\n      return progress.clamp(0.0, 1.0);\n    }\n    final now = utc.add(Duration(milliseconds: clockOffsetMs));\n    var elapsedSec = now.difference(anchorUtc!).inMicroseconds / 1e6;\n    if (elapsedSec < 0) elapsedSec = 0;\n    final delta = elapsedSec * speedFactor / totalDurationSeconds;\n    return (progressAtAnchor + delta).clamp(0.0, 1.0);\n  }\n\n  void play({\n    required DateTime anchorUtc,\n    double fromProgress = 0,\n  }) {\n    isPlaying = true;\n    this.anchorUtc = anchorUtc.toUtc();\n    progressAtAnchor = fromProgress.clamp(0.0, 1.0);\n    progress = progressAtAnchor;\n  }\n\n  void pause(DateTime utc) {\n    progress = progressAt(utc);\n    isPlaying = false;\n    anchorUtc = null;\n    progressAtAnchor = progress;\n  }\n\n  void stop({double atProgress = 0}) {\n    isPlaying = false;\n    anchorUtc = null;\n    progress = atProgress.clamp(0.0, 1.0);\n    progressAtAnchor = progress;\n  }\n\n  void seek(double toProgress, {DateTime? reanchorUtc}) {\n    progress = toProgress.clamp(0.0, 1.0);\n    progressAtAnchor = progress;\n    if (isPlaying && reanchorUtc != null) {\n      anchorUtc = reanchorUtc.toUtc();\n    }\n  }\n\n  /// Réancre en conservant la lecture (changement tempo / vitesse en cours de route).\n  void reanchorPlaying(DateTime utc) {\n    if (!isPlaying) return;\n    final p = progressAt(utc);\n    progressAtAnchor = p;\n    progress = p;\n    anchorUtc = utc.toUtc();\n  }\n\n  void updateTempo(int tempo, DateTime utc) {\n    tempoBpm = tempo.clamp(30, 400);\n    if (isPlaying) reanchorPlaying(utc);\n  }\n\n  void updateSpeedFactor(double factor, DateTime utc) {\n    speedFactor = factor.clamp(0.05, 2.0);\n    if (isPlaying) reanchorPlaying(utc);\n  }\n\n  void updateMeasureCount(int count) {\n    measureCount = math.max(1, count);\n  }\n\n  /// Échantillon d'horloge leader → lissage EMA du décalage.\n  void applyClockSample(int hostTimeMs) {\n    final local = DateTime.now().millisecondsSinceEpoch;\n    final sample = hostTimeMs - local;\n    clockOffsetMs = (clockOffsetMs * 0.85 + sample * 0.15).round();\n  }\n\n  /// Correction douce ou franche si l'écart dépasse le seuil.\n  void applyDriftCorrection(double hostProgress, DateTime utc) {\n    final local = progressAt(utc);\n    final error = hostProgress - local;\n    if (error.abs() < 0.0015) return;\n    if (error.abs() > 0.04) {\n      seek(hostProgress, reanchorUtc: isPlaying ? utc : null);\n      return;\n    }\n    if (isPlaying && anchorUtc != null) {\n      progressAtAnchor += error * 0.2;\n      progress = progressAt(utc);\n    } else {\n      progress = hostProgress;\n    }\n  }",
-    "sortOrder": 2
+    "sortOrder": 2,
+    "kind": "logic"
   },
   {
     "id": 3015,
@@ -701,6 +746,7 @@ export const snippets = [
     "language": "dart",
     "description": "Extrait de lib/core/utils/transposition.dart. Bb reste en bémols, F# en dièses. Une fondamentale naturelle suit l'armure du morceau.",
     "code": "  static String transposeChord(\n    String chord,\n    int semitones, {\n    bool globalPreferFlats = false,\n  }) {\n    if (chord.isEmpty || semitones == 0) return chord;\n\n    final sym = chord.trim().replaceAll('♯', '#').replaceAll('♭', 'b');\n    if (ChordParser.isNoChordSymbol(sym) || ChordParser.isGridStructureSymbol(sym)) {\n      return chord;\n    }\n\n    final m = RegExp(r'^([A-G](?:#|b)?)(.*)$').firstMatch(sym);\n    if (m == null) return chord;\n\n    final root = m.group(1)!;\n    final suffix = m.group(2) ?? '';\n\n    final pc = _pitchClassFromRoot(root);\n    if (pc == null) return chord;\n\n    var newPc = (pc + semitones) % 12;\n    if (newPc < 0) newPc += 12;\n\n    final bool useFlats;\n    if (root.length >= 2 && root[1] == 'b') {\n      useFlats = true;\n    } else if (root.contains('#')) {\n      useFlats = false;\n    } else {\n      useFlats = globalPreferFlats;\n    }\n\n    final newRoot = _spellPitchClass(newPc, useFlats);\n    return newRoot + suffix;\n  }",
-    "sortOrder": 3
+    "sortOrder": 3,
+    "kind": "logic"
   }
 ]

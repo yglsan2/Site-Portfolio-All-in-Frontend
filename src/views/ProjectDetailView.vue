@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { api } from '@/api/service'
 import { useLocale } from '@/composables/useLocale'
 import CodeBlock from '@/components/CodeBlock.vue'
+import SnippetKind from '@/components/SnippetKind.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -167,12 +168,13 @@ function goBack() {
           <h2 class="text-lg font-semibold text-portfolio-accent mb-4">{{ t('detail.snippets') }}</h2>
           <ul class="space-y-6">
             <li v-for="(s, i) in snippets" :key="s.id" :class="['card-pro opacity-0 animate-fade-in-up', `stagger-${Math.min(i + 1, 10)}`]">
-              <div class="flex items-center gap-2 mb-2">
+              <div class="flex flex-wrap items-center gap-2 mb-2">
+                <SnippetKind :kind="s.kind" />
                 <span class="text-xs font-medium text-portfolio-accent">{{ s.section }}</span>
                 <span class="text-xs text-portfolio-muted">{{ s.language }}</span>
               </div>
               <h3 class="font-semibold text-portfolio-text mb-2">{{ s.title }}</h3>
-              <p class="text-sm text-portfolio-muted mb-3">{{ s.description }}</p>
+              <p class="text-sm text-portfolio-text/80 mb-3">{{ s.description }}</p>
               <CodeBlock :code="s.code" :language="s.language" />
             </li>
           </ul>
