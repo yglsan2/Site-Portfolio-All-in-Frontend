@@ -94,14 +94,14 @@ onMounted(load)
             :href="`mailto:${profile.email}`"
             class="touch-target-inline inline-flex items-center gap-2 px-5 py-3 min-h-[44px] rounded-xl bg-portfolio-accent text-portfolio-bg font-medium hover:bg-portfolio-accent-hover transition-colors"
           >
-            {{ t('home.email') }}
+            {{ profile.email }}
           </a>
           <a
             v-if="profile.phoneHref"
             :href="profile.phoneHref"
             class="touch-target-inline inline-flex items-center gap-2 px-5 py-3 min-h-[44px] rounded-xl border border-white/15 text-portfolio-text hover:border-portfolio-accent/40 transition-colors"
           >
-            {{ t('home.phone') }}
+            {{ profile.phone }}
           </a>
           <a
             v-if="profile.linkedinUrl"

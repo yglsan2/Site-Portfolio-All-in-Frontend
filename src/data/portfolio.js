@@ -21,7 +21,7 @@ export const profile = {
   },
   location: 'Tours',
   email: 'superkoal@hotmail.com',
-  phone: '07 89 20 24 89',
+  phone: '0789202489',
   phoneHref: 'tel:+33789202489',
   linkedinUrl: 'https://www.linkedin.com/in/benjamin-moine-b4aa409a/',
   githubUrl: 'https://github.com/yglsan2',
